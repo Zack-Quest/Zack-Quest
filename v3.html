@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.7</title>
+<title>Zack Quest — V3.8</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -70,7 +70,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .visual-status{font-size:12px;color:#aeb9e8;margin-top:7px}
 @media(max-width:800px){.avatar-stage[data-hero="Chevalier"]{width:250px;height:315px}}
 
-/* V3.7 - cheveux interactifs */
+/* V3.8 - cheveux interactifs */
 .hair-tint{display:none;position:absolute;z-index:30;pointer-events:none;left:20%;top:3%;width:61%;height:38%;border-radius:48%;mix-blend-mode:color;opacity:.82;mask-image:radial-gradient(ellipse at 50% 45%,#000 0 54%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 0 54%,transparent 72%)}
 .avatar-stage[data-hero="Chevalier"] .hair-tint{display:block}
 .hair-tint[data-hair="Noir"]{background:#17141d;opacity:.18}
@@ -80,7 +80,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .hair-tint[data-hair="Blanc"]{background:#f2f5ff}
 .hair-tint[data-hair="Fantaisie"]{background:linear-gradient(90deg,#186cff,#7c32ff,#12d8ff)}
 
-/* V3.7 - yeux interactifs */
+/* V3.8 - yeux interactifs */
 .eye-tint{
   display:none; position:absolute; z-index:31; pointer-events:none;
   left:29%; top:32%; width:43%; height:9%;
@@ -98,13 +98,29 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .eye-tint[data-eyes="Bleu"]{background:#2f8cff}
 .eye-tint[data-eyes="Vert"]{background:#39a65a}
 .eye-tint[data-eyes="Gris"]{background:#7f8b9b}
+
+/* V3.8 — masques précis issus du Chevalier officiel */
+.hair-tint{
+ left:0!important;top:0!important;width:100%!important;height:100%!important;border-radius:0!important;
+ -webkit-mask-image:url("data:image/png;base64,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")!important;mask-image:url("data:image/png;base64,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")!important;
+ -webkit-mask-size:100% 100%!important;mask-size:100% 100%!important;
+ -webkit-mask-repeat:no-repeat!important;mask-repeat:no-repeat!important;
+ mix-blend-mode:color!important;opacity:.94!important;
+}
+.eye-tint{
+ left:0!important;top:0!important;width:100%!important;height:100%!important;
+ -webkit-mask-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVUAAAGuCAAAAAAFMsooAAABmklEQVR4nO3YQW7DIBAFUKh6/ytPN61DFSeC1NUM0XuLyEiJPP4QDLQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfxbZBcAsg/Uy8bBRSM8uYEn8Ljfabg+wg6pDdbuujqHiukP1I+3O1wy0msM1LdXoRRO5Qlqq4193Ot5d+iFvBhhe6POTYwzJFo44MdUhy1hJKJ60ikhMddCXXuUxfNb0mXnzeHFdVDnQ1lruvLoezkkvlFywVlmvziV8/62SoSbPq6vv87sMa4aammof05zLtT9tlpFZVxwF3K7mfvStaqiZhcVRQSyV8pNr2UwrpHqzssUqHGlLXq++rHamVXasp+2NJa8B3lTqerU/bGwudxfQTy/3l3xmdRxWXRlq+cMXKOOtprNDvOuDAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/KMvIe0uJ5DfHagAAAAASUVORK5CYII=")!important;mask-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVUAAAGuCAAAAAAFMsooAAABmklEQVR4nO3YQW7DIBAFUKh6/ytPN61DFSeC1NUM0XuLyEiJPP4QDLQGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfxbZBcAsg/Uy8bBRSM8uYEn8Ljfabg+wg6pDdbuujqHiukP1I+3O1wy0msM1LdXoRRO5Qlqq4193Ot5d+iFvBhhe6POTYwzJFo44MdUhy1hJKJ60ikhMddCXXuUxfNb0mXnzeHFdVDnQ1lruvLoezkkvlFywVlmvziV8/62SoSbPq6vv87sMa4aammof05zLtT9tlpFZVxwF3K7mfvStaqiZhcVRQSyV8pNr2UwrpHqzssUqHGlLXq++rHamVXasp+2NJa8B3lTqerU/bGwudxfQTy/3l3xmdRxWXRlq+cMXKOOtprNDvOuDAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/KMvIe0uJ5DfHagAAAAASUVORK5CYII=")!important;
+ -webkit-mask-size:100% 100%!important;mask-size:100% 100%!important;
+ -webkit-mask-repeat:no-repeat!important;mask-repeat:no-repeat!important;
+ mix-blend-mode:color!important;opacity:1!important;
+}
 </style>
 </head>
 <body>
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.7</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.8</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
