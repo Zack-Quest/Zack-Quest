@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.3</title>
+<title>Zack Quest — V3.4</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -52,23 +52,51 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .lock-preview{opacity:.55}
 @media(max-width:800px){.custom-row{grid-template-columns:1fr}}
 
-.avatar-stage{width:210px;height:230px;margin:8px auto;position:relative;border-radius:28px;background:radial-gradient(circle at 50% 35%,#3e58bd,#111938 72%);border:2px solid #7185f0;overflow:hidden;box-shadow:inset 0 0 35px #05081b}
-.chibi-head{position:absolute;width:94px;height:104px;left:58px;top:35px;border-radius:48%;background:#f3c9a5;border:3px solid #2b2140;z-index:4}
-.chibi-hair{position:absolute;width:104px;height:60px;left:53px;top:27px;border-radius:55px 55px 24px 24px;background:#5a3424;border:3px solid #2b2140;z-index:6}
-.chibi-hair:after{content:"";position:absolute;left:8px;right:8px;bottom:-15px;height:31px;background:inherit;clip-path:polygon(0 0,18% 55%,32% 5%,48% 60%,65% 4%,82% 52%,100% 0,100% 45%,0 45%)}
-.chibi-eye{position:absolute;width:15px;height:20px;top:78px;border-radius:50%;background:#65412d;z-index:7;border:2px solid #fff}.chibi-eye.left{left:78px}.chibi-eye.right{right:78px}
-.chibi-mouth{position:absolute;left:96px;top:111px;width:18px;height:8px;border-bottom:3px solid #7d3d4a;border-radius:50%;z-index:7}
-.chibi-glasses{position:absolute;left:67px;top:72px;width:76px;height:32px;z-index:9;display:none}.chibi-glasses i{position:absolute;width:30px;height:26px;border:4px solid #dce8ff;border-radius:50%;top:0}.chibi-glasses i:first-child{left:0}.chibi-glasses i:last-child{right:0}.chibi-glasses:after{content:"";position:absolute;left:29px;top:10px;width:18px;border-top:4px solid #dce8ff}
-.chibi-body{position:absolute;left:55px;top:132px;width:100px;height:88px;border-radius:34px 34px 18px 18px;background:linear-gradient(90deg,#69798f,#d5deea 48%,#5d6b82);border:3px solid #2b2140;z-index:2}
-.chibi-emblem{position:absolute;left:88px;top:151px;font-size:32px;z-index:5}.chibi-badge{position:absolute;right:10px;bottom:7px;font-size:30px;z-index:10}
-.avatar-stage[data-hero="Mage"] .chibi-body{background:linear-gradient(90deg,#493875,#856dc7,#392d62)}.avatar-stage[data-hero="Elfe"] .chibi-body{background:linear-gradient(90deg,#32614a,#64a678,#284c3b)}.avatar-stage[data-hero="Gobelin"] .chibi-head{background:#7bb46a}.avatar-stage[data-hero="Nain"] .chibi-body{background:linear-gradient(90deg,#69412d,#a56c43,#563421)}.avatar-stage[data-hero="Robot"] .chibi-head{background:#b9c8da;border-radius:28px}.avatar-stage[data-hero="Robot"] .chibi-hair{display:none}.avatar-stage[data-hero="Robot"] .chibi-body{background:linear-gradient(90deg,#5b7189,#c7d7e8,#4b6078)}.avatar-stage[data-hero="Maître des dragons"] .chibi-body{background:linear-gradient(90deg,#285a4f,#55a685,#20473e)}.avatar-stage[data-hero="Aventurier"] .chibi-body{background:linear-gradient(90deg,#6a5432,#b18a4d,#554126)}
+/* V3.4 — direction artistique officielle Zack Quest */
+.creator{background:
+linear-gradient(#06102a99,#06102acc),
+radial-gradient(circle at 22% 25%,#2f8cff 0,transparent 24%),
+radial-gradient(circle at 75% 18%,#7543c8 0,transparent 24%),#06102a}
+.creator-card{background:linear-gradient(145deg,#0c1d4d,#071333);border:2px solid #1f8cff;box-shadow:0 0 35px #1678ff55,0 24px 70px #000b}
+.creator-head h1{color:#ffd34e;text-shadow:0 2px 0 #6d3b00,0 0 18px #ffbf3f55}
+.custom-box,.preview{background:linear-gradient(145deg,#071c4c,#081536);border-color:#177de0;box-shadow:inset 0 0 18px #087cff16}
+.opt,.hero-choice{border-color:#147bd8;background:linear-gradient(#0c2b65,#071c49)}
+.opt.selected,.hero-choice.selected{outline:3px solid #ffd24a;box-shadow:0 0 16px #ffd24a88;background:#123c83}
+.start-btn{background:linear-gradient(180deg,#ffe36a,#ffad18);box-shadow:0 0 20px #ffc02d88;color:#382300}
+.avatar-stage{width:300px;height:340px;border-radius:30px;background:
+radial-gradient(circle at 50% 28%,#78caff 0,#1d6dcc 27%,#123a75 54%,#07162e 78%);
+border:3px solid #2ca4ff;box-shadow:inset 0 0 55px #001530,0 0 24px #168dff66;overflow:hidden}
+.avatar-stage:before{content:"🏰";position:absolute;font-size:125px;opacity:.20;right:-4px;top:2px;filter:saturate(.7)}
+.avatar-stage:after{content:"";position:absolute;left:38px;right:38px;bottom:15px;height:42px;border-radius:50%;background:#775b3e;box-shadow:0 -9px 0 #a58a61,0 8px 22px #0009}
+.chibi-head{width:116px;height:126px;left:92px;top:46px;border:4px solid #30203b;z-index:6}
+.chibi-hair{width:130px;height:75px;left:85px;top:34px;border:4px solid #30203b;z-index:8}
+.chibi-eye{width:19px;height:26px;top:101px;z-index:9}.chibi-eye.left{left:116px}.chibi-eye.right{right:116px}
+.chibi-mouth{left:139px;top:143px;width:22px;z-index:9}
+.chibi-glasses{left:102px;top:94px;width:96px;height:40px;z-index:11}.chibi-glasses i{width:39px;height:33px}.chibi-glasses i:last-child{right:0}.chibi-glasses:after{left:38px;width:20px;top:12px}
+.chibi-body{left:76px;top:166px;width:148px;height:145px;border-radius:42px 42px 22px 22px;border:4px solid #2b2140;
+background:linear-gradient(90deg,#4d6079 0,#dce8f3 25%,#748ba5 48%,#eef5fb 70%,#43566e 100%);z-index:4}
+.chibi-body:before{content:"";position:absolute;left:16px;right:16px;top:24px;height:14px;border-top:5px solid #d4a02d;border-bottom:3px solid #204f9b}
+.chibi-body:after{content:"";position:absolute;left:57px;top:54px;width:28px;height:48px;background:#146fe0;clip-path:polygon(50% 0,100% 28%,84% 100%,16% 100%,0 28%);border-radius:4px}
+.chibi-emblem{left:126px;top:203px;font-size:45px;z-index:7}
+.chibi-badge{right:17px;bottom:20px;font-size:44px;z-index:12}
+.knight-sword{position:absolute;left:45px;top:177px;font-size:72px;transform:rotate(-24deg);z-index:7;filter:drop-shadow(0 0 9px #55c8ff)}
+.knight-shield{position:absolute;right:42px;top:184px;font-size:73px;z-index:7;filter:drop-shadow(0 4px 4px #0007)}
+.knight-cape{position:absolute;left:69px;top:170px;width:162px;height:130px;background:#135bd1;clip-path:polygon(12% 0,88% 0,100% 100%,50% 80%,0 100%);z-index:2;filter:drop-shadow(0 5px 4px #0008)}
+.knight-dragon{position:absolute;right:14px;bottom:24px;font-size:54px;z-index:13;filter:drop-shadow(0 3px 3px #0008)}
+.knight-title{margin:10px auto 0;display:inline-block;padding:7px 18px;border-radius:999px;background:#09255b;border:1px solid #238eff;color:#dbeeff;font-weight:900}
+@media(max-width:800px){.avatar-stage{width:250px;height:290px;transform:scale(.9);transform-origin:top center;margin-bottom:-20px}}
+
+.avatar-stage:not([data-hero="Chevalier"]) .knight-sword,
+.avatar-stage:not([data-hero="Chevalier"]) .knight-shield,
+.avatar-stage:not([data-hero="Chevalier"]) .knight-cape,
+.avatar-stage:not([data-hero="Chevalier"]) .knight-dragon{display:none}
 </style>
 </head>
 <body>
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.3</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.2</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -79,13 +107,12 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
         <div class="custom-row"><div class="custom-label">👓 Lunettes</div><div class="option-list" id="glassesOptions"></div></div>
       </div></div>
     <div class="creator-bottom">
-      <div class="preview"><div class="avatar-stage" id="avatarStage" data-hero="Chevalier">
-<div class="chibi-cape"></div><div class="chibi-body"></div>
-<div class="chibi-head" id="previewFace"></div><div class="chibi-hair" id="previewHair"></div>
-<div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
-<div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
-<div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div></div>
+      <div class="preview"><div class="avatar-stage">
+          <div class="avatar-face" id="previewFace">🙂</div>
+          <div class="avatar-hair" id="previewHair"></div>
+          <div class="avatar-glasses" id="previewGlasses"></div>
+          <div class="avatar-hero" id="previewAvatar">🛡️</div>
+        </div><div class="knight-title">⚔️ CHEVALIER</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -247,19 +274,20 @@ function renderLookOptions(){
   });
 }
 function updateAvatarPreview(){
- const skins={"Clair":"#f3c9a5","Moyen":"#dfaa7e","Doré":"#bd7e52","Foncé":"#815238","Très foncé":"#543624"}, hairs={"Brun":"#5a3424","Noir":"#171821","Blond":"#e5bb55","Roux":"#b95832","Fantaisie":"#277ed0"}, eyes={"Marron":"#65412d","Bleu":"#3182ce","Vert":"#3f9255","Gris":"#788596"};
- const face=document.getElementById("previewFace"),hair=document.getElementById("previewHair"),g=document.getElementById("previewGlasses");
- if(face)face.style.background=skins[tempLook.skin]||skins.Clair;if(hair)hair.style.background=hairs[tempLook.hair]||hairs.Brun;
- document.querySelectorAll(".chibi-eye").forEach(e=>e.style.background=eyes[tempLook.eyes]||eyes.Marron);
- if(g){g.style.display=tempLook.glasses==="Aucune"?"none":"block";g.querySelectorAll("i").forEach(x=>{x.style.borderRadius=tempLook.glasses==="Carrées"?"7px":"50%";x.style.borderColor=tempLook.glasses==="Bleues"?"#57c8ff":tempLook.glasses==="Soleil"?"#252735":"#dce8ff";x.style.background=tempLook.glasses==="Soleil"?"#25273599":"transparent"})}
+  const skinFaces={"Clair":"🏻","Moyen":"🏼","Doré":"🏽","Foncé":"🏾","Très foncé":"🏿"};
+  const hairs={"Brun":"🟤","Noir":"⚫","Blond":"🟡","Roux":"🟠","Fantaisie":"🔵"};
+  const glasses={"Aucune":"","Rondes":"👓","Carrées":"👓","Bleues":"🥽","Soleil":"🕶️"};
+  const face=document.getElementById("previewFace"), hair=document.getElementById("previewHair"), g=document.getElementById("previewGlasses");
+  if(face) face.textContent="🙂"+(skinFaces[tempLook.skin]||"");
+  if(hair) hair.textContent=hairs[tempLook.hair]||"";
+  if(g) g.textContent=glasses[tempLook.glasses]||"";
 }
 function renderHeroChoices(){const e=document.getElementById("heroChoices");e.innerHTML="";heroes.forEach((h,i)=>{const b=document.createElement("button");b.className="hero-choice"+(selectedHeroIndex===i?" selected":"");b.innerHTML=`<span class="hero-icon">${h[1]}</span><div class="hero-name">${h[0]}</div><div class="hero-desc">${h[2]}</div>`;b.onclick=()=>selectHero(i);e.appendChild(b)})}
-function applyHeroPreview(h){const stage=document.getElementById("avatarStage");if(stage)stage.dataset.hero=h[0];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewEmblem").textContent=h[1]}
-function selectHero(i){selectedHeroIndex=i;const h=heroes[i];applyHeroPreview(h);document.getElementById("previewType").textContent=h[0]+" — "+h[2];updateAvatarPreview();updateCreator();renderHeroChoices()}
+function selectHero(i){selectedHeroIndex=i;const h=heroes[i];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2];updateCreator();renderHeroChoices()}
 function updateCreator(){const name=document.getElementById("pseudoInput").value.trim();document.getElementById("previewName").textContent=name||"Ton héros";document.getElementById("startHero").disabled=!(name&&selectedHeroIndex>=0)}
 function showCreator(){document.getElementById("creator").classList.remove("hidden");document.getElementById("mainApp").classList.add("hidden");document.getElementById("pseudoInput").value=s.profile?.pseudo||"";selectedHeroIndex=heroes.findIndex(h=>h[0]===s.profile?.heroType);
   tempLook=Object.assign({hair:"Brun",eyes:"Marron",skin:"Clair",glasses:"Aucune"},s.profile?.look||{});
-  renderLookOptions();updateAvatarPreview();if(selectedHeroIndex>=0){const h=heroes[selectedHeroIndex];applyHeroPreview(h);document.getElementById("previewType").textContent=h[0]+" — "+h[2]}updateAvatarPreview();updateCreator();renderHeroChoices()}
+  renderLookOptions();updateAvatarPreview();if(selectedHeroIndex>=0){const h=heroes[selectedHeroIndex];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2]}updateCreator();renderHeroChoices()}
 function hideCreator(){document.getElementById("creator").classList.add("hidden");document.getElementById("mainApp").classList.remove("hidden")}
 function saveHero(){const name=document.getElementById("pseudoInput").value.trim();if(!name||selectedHeroIndex<0)return;const h=heroes[selectedHeroIndex];s.profile={pseudo:name,heroType:h[0],heroIcon:h[1],look:{...tempLook}};save();hideCreator();render();toast("⚔️ Héros enregistré !")}
 function editHero(){
