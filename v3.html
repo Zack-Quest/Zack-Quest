@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.9</title>
+<title>Zack Quest — V3.9.1</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -63,19 +63,16 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .chibi-emblem{position:absolute;left:88px;top:151px;font-size:32px;z-index:5}.chibi-badge{position:absolute;right:10px;bottom:7px;font-size:30px;z-index:10}
 .avatar-stage[data-hero="Mage"] .chibi-body{background:linear-gradient(90deg,#493875,#856dc7,#392d62)}.avatar-stage[data-hero="Elfe"] .chibi-body{background:linear-gradient(90deg,#32614a,#64a678,#284c3b)}.avatar-stage[data-hero="Gobelin"] .chibi-head{background:#7bb46a}.avatar-stage[data-hero="Nain"] .chibi-body{background:linear-gradient(90deg,#69412d,#a56c43,#563421)}.avatar-stage[data-hero="Robot"] .chibi-head{background:#b9c8da;border-radius:28px}.avatar-stage[data-hero="Robot"] .chibi-hair{display:none}.avatar-stage[data-hero="Robot"] .chibi-body{background:linear-gradient(90deg,#5b7189,#c7d7e8,#4b6078)}.avatar-stage[data-hero="Maître des dragons"] .chibi-body{background:linear-gradient(90deg,#285a4f,#55a685,#20473e)}.avatar-stage[data-hero="Aventurier"] .chibi-body{background:linear-gradient(90deg,#6a5432,#b18a4d,#554126)}
 
-.official-knight-art{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:24px;display:none;position:absolute;inset:0;z-index:20}
-.avatar-stage[data-hero="Chevalier"] .official-knight-art{display:block}
-.avatar-stage[data-hero="Chevalier"] > :not(.official-knight-art){visibility:hidden}
 .avatar-stage[data-hero="Chevalier"]{width:300px;height:378px;border-radius:26px;overflow:hidden;background:#0a1635;box-shadow:0 0 26px #168dff77;border:3px solid #2ca4ff}
 .visual-status{font-size:12px;color:#aeb9e8;margin-top:7px}
 @media(max-width:800px){.avatar-stage[data-hero="Chevalier"]{width:250px;height:315px}}
 
-/* V3.9 — rendu pixel précis cheveux + iris */
+/* V3.9.1 — rendu pixel précis cheveux + iris */
 .official-knight-canvas{
   width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:24px;
   display:none;position:absolute;inset:0;z-index:20
 }
-.avatar-stage[data-hero="Chevalier"] .official-knight-canvas{display:block}
+.avatar-stage[data-hero="Chevalier"] .official-knight-canvas{display:block;visibility:visible!important}
 .avatar-stage[data-hero="Chevalier"] > :not(.official-knight-canvas){visibility:hidden}
 .avatar-stage[data-hero="Chevalier"]{width:300px;height:378px;border-radius:26px;overflow:hidden;background:#0a1635;box-shadow:0 0 26px #168dff77;border:3px solid #2ca4ff}
 .visual-status{font-size:12px;color:#aeb9e8;margin-top:7px}
@@ -86,7 +83,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.9</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.9.1</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -103,7 +100,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.9 • cheveux et iris modifiés au pixel près</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.9.1 • cheveux et iris modifiés au pixel près</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
