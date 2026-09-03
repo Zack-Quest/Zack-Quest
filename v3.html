@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zack Quest — V3 Prototype</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
+button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
+header{display:flex;gap:15px;align-items:center;background:linear-gradient(135deg,#17245c,#0e1435);border:1px solid #5368cf;border-radius:20px;padding:15px;box-shadow:0 10px 35px #0008}
+.hero{width:76px;height:76px;border-radius:18px;display:grid;place-items:center;font-size:46px;background:linear-gradient(145deg,#354ca8,#111938);border:2px solid #7185f0}
+h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;color:#aeb9e8;font-size:13px}
+.level{width:280px}.level b{color:#ffd451}.bar{height:14px;background:#070b25;border:1px solid #5969c1;border-radius:99px;overflow:hidden;margin-top:6px}.fill{height:100%;width:0;background:linear-gradient(90deg,#ffd451,#ff9e42);transition:.5s}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}.stat{background:#11183c;border:1px solid #4658ad;border-radius:14px;text-align:center;padding:9px}.stat b{display:block;font-size:20px;color:#ffd451}.stat small{color:#aeb9e8}
+.tabs{display:flex;gap:8px;margin:10px 0}.tab{border:1px solid #4658ad;background:#11183c;color:white;border-radius:10px;padding:9px 14px;cursor:pointer}.tab.active{background:#334895}
+.grid{display:grid;grid-template-columns:1.45fr .8fr;gap:12px}.panel{background:#11183c;border:1px solid #4658ad;border-radius:17px;padding:14px}.panel h2{font-size:17px}.sub{color:#aeb9e8;font-size:12px}
+.missions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}.mission{display:flex;gap:10px;align-items:center;padding:11px;border:1px solid #5265bf;border-radius:13px;background:linear-gradient(135deg,#1a2557,#11183a)}.mission.done{opacity:.52}.mission.done .mt{text-decoration:line-through}.check{width:38px;height:38px;flex:none;border-radius:10px;border:1px solid #6579d7;background:#0a1030;color:#fff;font-size:20px;cursor:pointer}.done .check{background:#19754d}.mt{font-weight:800}.meta{font-size:11px;color:#aeb9e8;margin-top:2px}.xp{margin-left:auto;color:#ffd451;font-weight:900;white-space:nowrap}
+.side{display:flex;flex-direction:column;gap:12px}.rank{font-size:24px;font-weight:900;color:#ffd451;margin:6px 0}.next{margin-top:4px}
+.reward{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #303b76}.reward:last-child{border:0}.buy{border:1px solid #6478d7;background:#263778;color:#fff;border-radius:9px;padding:7px 9px;cursor:pointer}.buy:disabled{opacity:.35}
+.hidden{display:none}.form{display:grid;grid-template-columns:1.5fr 1fr 90px 90px auto;gap:7px;margin-top:10px}input,select{background:#080d29;border:1px solid #5265bf;color:#fff;border-radius:9px;padding:9px}.primary{border:0;border-radius:9px;background:#4c61c8;color:#fff;font-weight:800;padding:9px 13px;cursor:pointer}
+.row{display:flex;align-items:center;gap:8px;border-bottom:1px solid #303b76;padding:9px 0}.row span{flex:1}.danger{background:#6c2942;border:1px solid #b55c78;color:#fff;border-radius:8px;padding:6px 9px;cursor:pointer}
+.notice{margin-top:10px;padding:10px;border-radius:10px;background:#0b1230;color:#aeb9e8;font-size:12px}.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;background:#1d2c6d;border:1px solid #7588ec;border-radius:12px;padding:12px 16px;transition:.25s;box-shadow:0 10px 30px #0009}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.creator{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 20%,#223a86 0,transparent 28%),radial-gradient(circle at 80% 10%,#512f77 0,transparent 25%),#070b20}
+.creator-card{width:min(1100px,100%);background:linear-gradient(145deg,#121a43,#0c1230);border:1px solid #6378dc;border-radius:24px;padding:22px;box-shadow:0 24px 70px #0009}
+.creator-head{text-align:center;margin-bottom:18px}.creator-head h1{font-size:30px}.creator-head p{color:#b7c2ef}
+.step{margin:18px 0}.step h2{font-size:17px;margin-bottom:9px;color:#ffd451}
+.hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.hero-choice{border:1px solid #5368cf;background:#11183c;color:white;border-radius:16px;padding:14px;cursor:pointer;text-align:center;transition:.18s}.hero-choice:hover{transform:translateY(-2px);border-color:#8797ef}.hero-choice.selected{outline:3px solid #ffd451;background:#263778}
+.hero-icon{font-size:42px;display:block;margin-bottom:6px}.hero-name{font-weight:900}.hero-desc{font-size:11px;color:#aeb9e8;margin-top:4px}
+.creator-bottom{display:grid;grid-template-columns:1fr .8fr;gap:14px;margin-top:14px}
+.preview{background:linear-gradient(145deg,#1a2557,#0d1435);border:1px solid #5265bf;border-radius:18px;padding:18px;text-align:center}
+.preview-avatar{font-size:92px;line-height:1.1}.preview-name{font-size:24px;font-weight:900;color:#ffd451;margin-top:8px}.preview-sub{color:#aeb9e8;font-size:12px}
+.start-btn{width:100%;margin-top:12px;border:0;border-radius:13px;background:linear-gradient(90deg,#ffd451,#ff9e42);color:#1a1330;font-weight:1000;padding:14px;cursor:pointer;font-size:17px}.start-btn:disabled{opacity:.45;cursor:not-allowed}
+.profile-badge{display:flex;align-items:center;gap:9px;background:#0b1230;border:1px solid #4658ad;border-radius:13px;padding:8px 11px}.profile-badge .mini-avatar{font-size:30px}.profile-badge b{display:block}.profile-badge small{color:#aeb9e8}.edit-profile{border:1px solid #5265bf;background:#11183c;color:white;border-radius:9px;padding:7px 9px;cursor:pointer}.locked-note{font-size:12px;color:#aeb9e8;margin-top:6px}
+
+@media(max-width:800px){.hero-grid{grid-template-columns:repeat(2,1fr)}.creator-bottom{grid-template-columns:1fr}.creator-card{padding:15px}header{flex-wrap:wrap}.level{width:100%}.grid{grid-template-columns:1fr}.missions{grid-template-columns:1fr}.form{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<div id="creator" class="creator hidden">
+  <div class="creator-card">
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
+    <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">🔒 Dans la prochaine étape, casques, capes, armes et familiers se débloqueront avec les niveaux.</div></div>
+    <div class="creator-bottom">
+      <div class="preview"><div class="preview-avatar" id="previewAvatar">🛡️</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div></div>
+      <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="mainApp">
+<header>
+<div class="hero" id="headerHero">🛡️</div>
+<div class="title"><h1 id="appTitle">ZACK QUEST</h1><p>⚔️ L'école devient une aventure.</p></div>
+<div class="profile-badge"><div class="mini-avatar" id="miniAvatar">🛡️</div><div><b id="profileName">Zack</b><small id="profileType">Héros</small></div><button class="edit-profile" onclick="editHero()">🧙 Mon héros</button></div>
+<div class="level"><b id="level"></b><div id="xp"></div><div class="bar"><div class="fill" id="fill"></div></div></div>
+</header>
+
+<div class="stats">
+<div class="stat"><b id="total"></b><small>XP TOTAL</small></div>
+<div class="stat"><b id="coins"></b><small>PIÈCES</small></div>
+<div class="stat"><b id="streak"></b><small>SÉRIE</small></div>
+<div class="stat"><b id="done"></b><small>MISSIONS</small></div>
+</div>
+
+<div class="tabs">
+<button class="tab active" onclick="mode('child')">👦 Espace Zack</button>
+<button class="tab" onclick="mode('parent')">👩 Espace parent</button>
+</div>
+
+<section id="child">
+<div class="grid">
+<div class="panel">
+<h2>🎯 MISSIONS DU JOUR</h2><div class="sub" id="date"></div><div class="notice" style="margin-top:7px">📅 Les missions se renouvellent chaque jour. ⭐ XP et 🪙 pièces restent acquis.</div>
+<div class="missions" id="missions"></div>
+<div class="notice">Chaque mission terminée donne de l'XP et des pièces. Une mission déjà validée peut être rouverte par le parent.</div>
+</div>
+<div class="side">
+<div class="panel"><h2>🏆 PROGRESSION</h2><div class="rank" id="rank"></div><div class="sub" id="next"></div></div>
+<div class="panel"><h2>🎁 RÉCOMPENSES</h2><div id="shop"></div></div>
+</div>
+</div>
+</section>
+
+<section id="parent" class="hidden">
+<div class="panel">
+<h2>👩‍👦 CRÉER UNE MISSION</h2><div class="sub">Règles V1 : le parent choisit la matière, les XP et les pièces.</div>
+<div class="form">
+<input id="title" placeholder="Ex. Exercices de maths">
+<select id="cat"><option>Mathématiques</option><option>Français</option><option>Lecture</option><option>Histoire-Géo</option><option>Sciences</option><option>EPS</option><option>Mission spéciale</option></select>
+<input id="xpval" type="number" value="100" min="10" step="10">
+<input id="coinval" type="number" value="50" min="0" step="10">
+<button class="primary" onclick="add()">Ajouter</button>
+</div>
+<div class="notice">Pour la V1, les données restent sur cet appareil. Plus tard, nous ajouterons un vrai compte parent et une synchronisation.</div>
+</div>
+<div class="panel" style="margin-top:12px"><h2>📋 MISSIONS</h2><div id="list"></div></div>
+</section>
+</div>
+<div class="toast" id="toast"></div>
+
+<button id="heroFab" onclick="editHero()" title="Créer ou modifier mon héros"
+style="position:fixed;right:18px;bottom:18px;z-index:50;border:1px solid #7185f0;
+background:#263778;color:white;border-radius:999px;padding:11px 15px;font-weight:900;
+box-shadow:0 8px 25px #0008;cursor:pointer">🧙 Mon héros</button>
+
+
+<script>
+const KEY="zackquest_v1";
+const defaults={
+xp:0,coins:0,streak:0,lastDay:null,dayStateDate:null,
+profile:{pseudo:"",heroType:"",heroIcon:""},
+missions:[
+{id:1,title:"Français",cat:"Français",xp:100,coins:50,done:false},
+{id:2,title:"Mathématiques",cat:"Mathématiques",xp:100,coins:50,done:false},
+{id:3,title:"Lecture quotidienne",cat:"Lecture",xp:50,coins:30,done:false},
+{id:4,title:"Histoire-Géo",cat:"Histoire-Géo",xp:100,coins:50,done:false},
+{id:5,title:"Devoirs / révisions",cat:"Mission spéciale",xp:100,coins:50,done:false},
+{id:6,title:"EPS",cat:"EPS",xp:50,coins:30,done:false}
+],purchases:[]};
+let loaded=JSON.parse(localStorage.getItem(KEY)||"null");
+let s=loaded||structuredClone(defaults);
+if(!s.profile || typeof s.profile!=="object")s.profile={pseudo:"",heroType:"",heroIcon:""};
+s.profile.pseudo=s.profile.pseudo||"";
+s.profile.heroType=s.profile.heroType||"";
+s.profile.heroIcon=s.profile.heroIcon||"";
+const levels=[[0,"APPRENTI"],[1000,"AVENTURIER"],[2000,"CRÉATEUR"],[3000,"HÉROS"],[4000,"CHEVALIER ÉLITE"],[5000,"MAÎTRE"],[6500,"CHAMPION"],[8000,"LÉGENDE"],[10000,"MYTHE"],[12500,"MAÎTRE ULTIME"]];
+const shop=[["Choisir le dessert","🍰",300],["30 min de jeu","🎮",500],["Choisir le film","🎬",700],["1 h de jeu","🕹️",1000],["Récompense spéciale","👑",2000]];
+const heroes=[["Chevalier","🛡️","Brave et protecteur"],["Mage","🧙","Maître des mystères"],["Elfe","🧝","Rapide et précis"],["Gobelin","👺","Malin et imprévisible"],["Nain","⛏️","Solide et déterminé"],["Robot","🤖","Logique et puissant"],["Maître des dragons","🐉","Lié aux créatures légendaires"],["Aventurier","🧭","Curieux et intrépide"]];
+
+function localDate(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function prepareToday(){
+  const today=localDate();
+  if(s.dayStateDate!==today){
+    // Nouveau jour : on remet uniquement les missions du jour à zéro.
+    // L'XP, les pièces et la progression restent définitivement acquis.
+    s.missions.forEach(m=>m.done=false);
+    s.dayStateDate=today;
+    save();
+  }
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(s))}
+function info(){let i=0;levels.forEach((x,n)=>{if(s.xp>=x[0])i=n});return {i,cur:levels[i],next:levels[i+1]}}
+function render(){
+prepareToday();
+save();let z=info(),base=z.cur[0],top=z.next?z.next[0]:base+2500,p=Math.min(100,Math.max(0,(s.xp-base)/(top-base)*100));
+document.getElementById("level").textContent=`NIVEAU ${z.i+1} — ${z.cur[1]}`;
+const pfile=s.profile||{};document.getElementById("headerHero").textContent=pfile.heroIcon||"🛡️";document.getElementById("miniAvatar").textContent=pfile.heroIcon||"🛡️";document.getElementById("profileName").textContent=pfile.pseudo||"Zack";document.getElementById("profileType").textContent=pfile.heroType||"Héros";document.getElementById("appTitle").textContent=(pfile.pseudo?pfile.pseudo.toUpperCase()+" — ZACK QUEST":"ZACK QUEST");
+document.getElementById("rank").textContent=z.cur[1];
+document.getElementById("xp").textContent=`${s.xp.toLocaleString("fr-FR")} / ${top.toLocaleString("fr-FR")} XP`;
+document.getElementById("fill").style.width=p+"%";
+document.getElementById("total").textContent=s.xp.toLocaleString("fr-FR");
+document.getElementById("coins").textContent=s.coins.toLocaleString("fr-FR")+" 🪙";
+document.getElementById("streak").textContent=s.streak+" 🔥";
+document.getElementById("done").textContent=s.missions.filter(x=>x.done).length;
+document.getElementById("next").textContent=z.next?`Encore ${(z.next[0]-s.xp).toLocaleString("fr-FR")} XP pour ${z.next[1]}.`:"🏆 Niveau maximum de la V1 atteint !";
+document.getElementById("date").textContent=new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+renderMissions();renderShop();renderList()
+}
+function esc(x){return String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function renderMissions(){let e=document.getElementById("missions");e.innerHTML="";s.missions.forEach(m=>{let d=document.createElement("div");d.className="mission "+(m.done?"done":"");d.innerHTML=`<button class="check" onclick="toggle(${m.id})">${m.done?"✓":"○"}</button><div><div class="mt">${esc(m.title)}</div><div class="meta">${esc(m.cat)} • +${m.coins} 🪙</div></div><div class="xp">+${m.xp} XP</div>`;e.appendChild(d)})}
+function toggle(id){
+prepareToday();
+let m=s.missions.find(x=>x.id===id);if(!m)return;
+if(m.done){m.done=false;s.xp=Math.max(0,s.xp-m.xp);s.coins=Math.max(0,s.coins-m.coins);toast("Mission rouverte")}
+else{let before=info().i;m.done=true;s.xp+=m.xp;s.coins+=m.coins;streak();toast(`🎉 +${m.xp} XP et +${m.coins} 🪙`);if(info().i>before)setTimeout(()=>toast("🏆 NOUVEAU NIVEAU !"),400)}
+render()
+}
+function streak(){
+  const t=localDate();
+  if(s.lastDay===t)return;
+  const d=new Date(); d.setDate(d.getDate()-1);
+  const y=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  s.streak=s.lastDay===y?s.streak+1:1;
+  s.lastDay=t;
+}
+function renderShop(){let e=document.getElementById("shop");e.innerHTML="";shop.forEach((x,i)=>{let [n,ic,c]=x,b=s.purchases.includes(i),d=document.createElement("div");d.className="reward";d.innerHTML=`<span>${ic} ${n}<br><small class="sub">${c} 🪙</small></span><button class="buy" ${b||s.coins<c?"disabled":""} onclick="buy(${i})">${b?"Obtenu":"Échanger"}</button>`;e.appendChild(d)})}
+function buy(i){let [n,ic,c]=shop[i];if(s.coins<c)return;s.coins-=c;s.purchases.push(i);toast("🎁 "+n+" débloqué !");render()}
+function add(){let t=document.getElementById("title").value.trim();if(!t){toast("Écris le nom de la mission.");return}s.missions.push({id:Date.now(),title:t,cat:document.getElementById("cat").value,xp:+document.getElementById("xpval").value||0,coins:+document.getElementById("coinval").value||0,done:false});document.getElementById("title").value="";toast("Mission ajoutée");render()}
+function renderList(){let e=document.getElementById("list");e.innerHTML="";s.missions.forEach(m=>{let d=document.createElement("div");d.className="row";d.innerHTML=`<span><b>${esc(m.title)}</b><br><small class="sub">${esc(m.cat)} • ${m.xp} XP • ${m.coins} 🪙 ${m.done?"• terminée":""}</small></span><button class="danger" onclick="removeM(${m.id})">Supprimer</button>`;e.appendChild(d)})}
+function removeM(id){s.missions=s.missions.filter(x=>x.id!==id);toast("Mission supprimée");render()}
+function mode(x){document.getElementById("child").classList.toggle("hidden",x!=="child");document.getElementById("parent").classList.toggle("hidden",x!=="parent");document.querySelectorAll(".tab").forEach((b,i)=>b.classList.toggle("active",(x==="child"&&i===0)||(x==="parent"&&i===1)))}
+
+let selectedHeroIndex=-1;
+function renderHeroChoices(){const e=document.getElementById("heroChoices");e.innerHTML="";heroes.forEach((h,i)=>{const b=document.createElement("button");b.className="hero-choice"+(selectedHeroIndex===i?" selected":"");b.innerHTML=`<span class="hero-icon">${h[1]}</span><div class="hero-name">${h[0]}</div><div class="hero-desc">${h[2]}</div>`;b.onclick=()=>selectHero(i);e.appendChild(b)})}
+function selectHero(i){selectedHeroIndex=i;const h=heroes[i];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2];updateCreator();renderHeroChoices()}
+function updateCreator(){const name=document.getElementById("pseudoInput").value.trim();document.getElementById("previewName").textContent=name||"Ton héros";document.getElementById("startHero").disabled=!(name&&selectedHeroIndex>=0)}
+function showCreator(){document.getElementById("creator").classList.remove("hidden");document.getElementById("mainApp").classList.add("hidden");document.getElementById("pseudoInput").value=s.profile?.pseudo||"";selectedHeroIndex=heroes.findIndex(h=>h[0]===s.profile?.heroType);if(selectedHeroIndex>=0){const h=heroes[selectedHeroIndex];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2]}updateCreator();renderHeroChoices()}
+function hideCreator(){document.getElementById("creator").classList.add("hidden");document.getElementById("mainApp").classList.remove("hidden")}
+function saveHero(){const name=document.getElementById("pseudoInput").value.trim();if(!name||selectedHeroIndex<0)return;const h=heroes[selectedHeroIndex];s.profile={pseudo:name,heroType:h[0],heroIcon:h[1]};save();hideCreator();render();toast("⚔️ Héros enregistré !")}
+function editHero(){
+  showCreator();
+  setTimeout(()=>document.getElementById("pseudoInput").focus(),50);
+}
+document.addEventListener("input",e=>{if(e.target.id==="pseudoInput")updateCreator()});
+
+function toast(t){let e=document.getElementById("toast");e.textContent=t;e.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove("show"),1800)}
+render();
+if(!s.profile||!s.profile.pseudo||!s.profile.heroType){showCreator()}else{hideCreator()}
+</script>
+</body>
+</html>
