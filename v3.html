@@ -35,17 +35,45 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .profile-badge{display:flex;align-items:center;gap:9px;background:#0b1230;border:1px solid #4658ad;border-radius:13px;padding:8px 11px}.profile-badge .mini-avatar{font-size:30px}.profile-badge b{display:block}.profile-badge small{color:#aeb9e8}.edit-profile{border:1px solid #5265bf;background:#11183c;color:white;border-radius:9px;padding:7px 9px;cursor:pointer}.locked-note{font-size:12px;color:#aeb9e8;margin-top:6px}
 
 @media(max-width:800px){.hero-grid{grid-template-columns:repeat(2,1fr)}.creator-bottom{grid-template-columns:1fr}.creator-card{padding:15px}header{flex-wrap:wrap}.level{width:100%}.grid{grid-template-columns:1fr}.missions{grid-template-columns:1fr}.form{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}}
+
+.custom-box{margin-top:14px;background:#0b1230;border:1px solid #4658ad;border-radius:16px;padding:14px}
+.custom-box h2{font-size:17px;color:#ffd451;margin-bottom:10px}
+.custom-row{display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;margin:10px 0}
+.custom-label{font-weight:900;font-size:13px}
+.option-list{display:flex;gap:8px;flex-wrap:wrap}
+.opt{min-width:48px;border:1px solid #5265bf;background:#11183c;color:white;border-radius:10px;padding:8px 10px;cursor:pointer}
+.opt.selected{outline:2px solid #ffd451;background:#263778}
+.avatar-stage{width:150px;height:150px;margin:8px auto;position:relative;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#344ca8,#111938 70%);border:2px solid #7185f0}
+.avatar-face{font-size:78px;line-height:1}
+.avatar-glasses{position:absolute;left:50%;top:55px;transform:translateX(-50%);font-size:48px;line-height:1}
+.avatar-hair{position:absolute;left:50%;top:24px;transform:translateX(-50%);font-size:42px;line-height:1}
+.avatar-hero{position:absolute;right:7px;bottom:5px;font-size:38px}
+.skin-dot{width:28px;height:28px;border-radius:50%;display:inline-block;border:2px solid #fff8}
+.lock-preview{opacity:.55}
+@media(max-width:800px){.custom-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.2</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
-    <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">🔒 Dans la prochaine étape, casques, capes, armes et familiers se débloqueront avec les niveaux.</div></div>
+    <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
+      <div class="custom-box">
+        <h2>3 — Fais un héros qui te ressemble</h2>
+        <div class="custom-row"><div class="custom-label">💇 Cheveux</div><div class="option-list" id="hairOptions"></div></div>
+        <div class="custom-row"><div class="custom-label">👁️ Yeux</div><div class="option-list" id="eyeOptions"></div></div>
+        <div class="custom-row"><div class="custom-label">🙂 Peau</div><div class="option-list" id="skinOptions"></div></div>
+        <div class="custom-row"><div class="custom-label">👓 Lunettes</div><div class="option-list" id="glassesOptions"></div></div>
+      </div></div>
     <div class="creator-bottom">
-      <div class="preview"><div class="preview-avatar" id="previewAvatar">🛡️</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div></div>
+      <div class="preview"><div class="avatar-stage">
+          <div class="avatar-face" id="previewFace">🙂</div>
+          <div class="avatar-hair" id="previewHair"></div>
+          <div class="avatar-glasses" id="previewGlasses"></div>
+          <div class="avatar-hero" id="previewAvatar">🛡️</div>
+        </div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -127,9 +155,21 @@ if(!s.profile || typeof s.profile!=="object")s.profile={pseudo:"",heroType:"",he
 s.profile.pseudo=s.profile.pseudo||"";
 s.profile.heroType=s.profile.heroType||"";
 s.profile.heroIcon=s.profile.heroIcon||"";
+if(!s.profile.look)s.profile.look={hair:"Brun",eyes:"Marron",skin:"Clair",glasses:"Aucune"};
+s.profile.look.hair=s.profile.look.hair||"Brun";
+s.profile.look.eyes=s.profile.look.eyes||"Marron";
+s.profile.look.skin=s.profile.look.skin||"Clair";
+s.profile.look.glasses=s.profile.look.glasses||"Aucune";
 const levels=[[0,"APPRENTI"],[1000,"AVENTURIER"],[2000,"CRÉATEUR"],[3000,"HÉROS"],[4000,"CHEVALIER ÉLITE"],[5000,"MAÎTRE"],[6500,"CHAMPION"],[8000,"LÉGENDE"],[10000,"MYTHE"],[12500,"MAÎTRE ULTIME"]];
 const shop=[["Choisir le dessert","🍰",300],["30 min de jeu","🎮",500],["Choisir le film","🎬",700],["1 h de jeu","🕹️",1000],["Récompense spéciale","👑",2000]];
 const heroes=[["Chevalier","🛡️","Brave et protecteur"],["Mage","🧙","Maître des mystères"],["Elfe","🧝","Rapide et précis"],["Gobelin","👺","Malin et imprévisible"],["Nain","⛏️","Solide et déterminé"],["Robot","🤖","Logique et puissant"],["Maître des dragons","🐉","Lié aux créatures légendaires"],["Aventurier","🧭","Curieux et intrépide"]];
+const lookData={
+ hair:[["Brun","🟤"],["Noir","⚫"],["Blond","🟡"],["Roux","🟠"],["Fantaisie","🔵"]],
+ eyes:[["Marron","🤎"],["Bleu","💙"],["Vert","💚"],["Gris","🩶"]],
+ skin:[["Clair","🏻"],["Moyen","🏼"],["Doré","🏽"],["Foncé","🏾"],["Très foncé","🏿"]],
+ glasses:[["Aucune","—"],["Rondes","👓"],["Carrées","👓"],["Bleues","🥽"],["Soleil","🕶️"]]
+};
+let tempLook={hair:"Brun",eyes:"Marron",skin:"Clair",glasses:"Aucune"};
 
 function localDate(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function prepareToday(){
@@ -185,12 +225,32 @@ function removeM(id){s.missions=s.missions.filter(x=>x.id!==id);toast("Mission s
 function mode(x){document.getElementById("child").classList.toggle("hidden",x!=="child");document.getElementById("parent").classList.toggle("hidden",x!=="parent");document.querySelectorAll(".tab").forEach((b,i)=>b.classList.toggle("active",(x==="child"&&i===0)||(x==="parent"&&i===1)))}
 
 let selectedHeroIndex=-1;
+function renderLookOptions(){
+  [["hair","hairOptions"],["eyes","eyeOptions"],["skin","skinOptions"],["glasses","glassesOptions"]].forEach(([key,id])=>{
+    const box=document.getElementById(id); if(!box)return; box.innerHTML="";
+    lookData[key].forEach(([name,icon])=>{
+      const b=document.createElement("button"); b.className="opt"+(tempLook[key]===name?" selected":"");
+      b.textContent=icon+" "+name; b.onclick=()=>{tempLook[key]=name;renderLookOptions();updateAvatarPreview()}; box.appendChild(b);
+    });
+  });
+}
+function updateAvatarPreview(){
+  const skinFaces={"Clair":"🏻","Moyen":"🏼","Doré":"🏽","Foncé":"🏾","Très foncé":"🏿"};
+  const hairs={"Brun":"🟤","Noir":"⚫","Blond":"🟡","Roux":"🟠","Fantaisie":"🔵"};
+  const glasses={"Aucune":"","Rondes":"👓","Carrées":"👓","Bleues":"🥽","Soleil":"🕶️"};
+  const face=document.getElementById("previewFace"), hair=document.getElementById("previewHair"), g=document.getElementById("previewGlasses");
+  if(face) face.textContent="🙂"+(skinFaces[tempLook.skin]||"");
+  if(hair) hair.textContent=hairs[tempLook.hair]||"";
+  if(g) g.textContent=glasses[tempLook.glasses]||"";
+}
 function renderHeroChoices(){const e=document.getElementById("heroChoices");e.innerHTML="";heroes.forEach((h,i)=>{const b=document.createElement("button");b.className="hero-choice"+(selectedHeroIndex===i?" selected":"");b.innerHTML=`<span class="hero-icon">${h[1]}</span><div class="hero-name">${h[0]}</div><div class="hero-desc">${h[2]}</div>`;b.onclick=()=>selectHero(i);e.appendChild(b)})}
 function selectHero(i){selectedHeroIndex=i;const h=heroes[i];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2];updateCreator();renderHeroChoices()}
 function updateCreator(){const name=document.getElementById("pseudoInput").value.trim();document.getElementById("previewName").textContent=name||"Ton héros";document.getElementById("startHero").disabled=!(name&&selectedHeroIndex>=0)}
-function showCreator(){document.getElementById("creator").classList.remove("hidden");document.getElementById("mainApp").classList.add("hidden");document.getElementById("pseudoInput").value=s.profile?.pseudo||"";selectedHeroIndex=heroes.findIndex(h=>h[0]===s.profile?.heroType);if(selectedHeroIndex>=0){const h=heroes[selectedHeroIndex];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2]}updateCreator();renderHeroChoices()}
+function showCreator(){document.getElementById("creator").classList.remove("hidden");document.getElementById("mainApp").classList.add("hidden");document.getElementById("pseudoInput").value=s.profile?.pseudo||"";selectedHeroIndex=heroes.findIndex(h=>h[0]===s.profile?.heroType);
+  tempLook=Object.assign({hair:"Brun",eyes:"Marron",skin:"Clair",glasses:"Aucune"},s.profile?.look||{});
+  renderLookOptions();updateAvatarPreview();if(selectedHeroIndex>=0){const h=heroes[selectedHeroIndex];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewType").textContent=h[0]+" — "+h[2]}updateCreator();renderHeroChoices()}
 function hideCreator(){document.getElementById("creator").classList.add("hidden");document.getElementById("mainApp").classList.remove("hidden")}
-function saveHero(){const name=document.getElementById("pseudoInput").value.trim();if(!name||selectedHeroIndex<0)return;const h=heroes[selectedHeroIndex];s.profile={pseudo:name,heroType:h[0],heroIcon:h[1]};save();hideCreator();render();toast("⚔️ Héros enregistré !")}
+function saveHero(){const name=document.getElementById("pseudoInput").value.trim();if(!name||selectedHeroIndex<0)return;const h=heroes[selectedHeroIndex];s.profile={pseudo:name,heroType:h[0],heroIcon:h[1],look:{...tempLook}};save();hideCreator();render();toast("⚔️ Héros enregistré !")}
 function editHero(){
   showCreator();
   setTimeout(()=>document.getElementById("pseudoInput").focus(),50);
