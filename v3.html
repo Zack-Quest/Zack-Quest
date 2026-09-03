@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.6</title>
+<title>Zack Quest — V3.6.1</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -65,19 +65,19 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 .official-knight-art{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:24px;display:none;position:absolute;inset:0;z-index:20}
 .avatar-stage[data-hero="Chevalier"] .official-knight-art{display:block}
-.avatar-stage[data-hero="Chevalier"] > :not(.official-knight-art){visibility:hidden}
+.avatar-stage[data-hero="Chevalier"] > :not(.official-knight-art):not(.hair-tint){visibility:hidden}
 .avatar-stage[data-hero="Chevalier"]{width:300px;height:378px;border-radius:26px;overflow:hidden;background:#0a1635;box-shadow:0 0 26px #168dff77;border:3px solid #2ca4ff}
 .visual-status{font-size:12px;color:#aeb9e8;margin-top:7px}
 @media(max-width:800px){.avatar-stage[data-hero="Chevalier"]{width:250px;height:315px}}
 
-/* V3.6 - cheveux interactifs */
+/* V3.6.1 - cheveux interactifs */
 .hair-tint{display:none;position:absolute;z-index:30;pointer-events:none;left:20%;top:3%;width:61%;height:38%;border-radius:48%;mix-blend-mode:color;opacity:.82;mask-image:radial-gradient(ellipse at 50% 45%,#000 0 54%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 0 54%,transparent 72%)}
 .avatar-stage[data-hero="Chevalier"] .hair-tint{display:block}
-.hair-tint[data-hair="Noir"]{background:#17141d;opacity:.20}
-.hair-tint[data-hair="Brun"]{background:#7a351b}
-.hair-tint[data-hair="Blond"]{background:#ffd25b}
-.hair-tint[data-hair="Roux"]{background:#e53a20}
-.hair-tint[data-hair="Blanc"]{background:#dfe8ff}
+.hair-tint[data-hair="Noir"]{background:#17141d;opacity:.18}
+.hair-tint[data-hair="Brun"]{background:#8b3f20}
+.hair-tint[data-hair="Blond"]{background:#ffe06a}
+.hair-tint[data-hair="Roux"]{background:#ff3d22}
+.hair-tint[data-hair="Blanc"]{background:#f2f5ff}
 .hair-tint[data-hair="Fantaisie"]{background:linear-gradient(90deg,#186cff,#7c32ff,#12d8ff)}
 </style>
 </head>
@@ -85,7 +85,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.6</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.6.1</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
