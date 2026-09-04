@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.25 DEV</title>
+<title>Zack Quest — V3.25.1 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.25 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.25.1 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
 <div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
@@ -238,7 +238,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.25 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.25.1 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -1191,6 +1191,67 @@ function zqV325Bind(){
    on reverrouille donc les handlers après chaque rendu. */
 setTimeout(zqV325Bind,600);
 setInterval(zqV325Bind,700);
+
+
+/* ===== V3.25.1 — LOCK STRICT DU GOBELIN ROUGE ===== */
+(function(){
+  let zqGoblinImplementedForm="original";
+
+  window.zqV325ShowGoblin=function(form){
+    const layer=document.getElementById("zqIllustratedHero");
+    const img=document.getElementById("zqIllustratedHeroImg");
+    const pt=document.getElementById("previewType");
+    if(!layer||!img) return;
+
+    if(form==="Rouge"){
+      zqGoblinImplementedForm="red";
+      img.src=ZQ_GOBLIN_BERSERKER;
+      if(pt) pt.textContent="Gobelin Rouge — Berserker";
+      layer.style.display="block";
+      try{toast("🔥 Gobelin Rouge — Berserker")}catch(e){}
+      return;
+    }
+
+    zqGoblinImplementedForm="original";
+    img.src=ZQ_GOBLIN_V1;
+    if(pt) pt.textContent="Gobelin — Malin et imprévisible";
+    layer.style.display="block";
+    try{toast("👹 Gobelin — Original")}catch(e){}
+  };
+
+  window.zqV325EvolutionClick=function(evo){
+    if(zqActiveHero()==="goblin"){
+      if(evo==="Bleu") return window.zqV325ShowGoblin("Bleu");
+      if(evo==="Rouge") return window.zqV325ShowGoblin("Rouge");
+
+      /* Important: Vert/Noir/Roi ne modifient PLUS l'image tant
+         que leurs illustrations ne sont pas intégrées. */
+      const labels=zqBranchLabels("goblin");
+      const name=evo==="Vert"?labels.green:evo==="Noir"?labels.black:labels.gold;
+      try{toast("👹 "+name+" — illustration à intégrer")}catch(e){}
+      return;
+    }
+
+    zqShowTocadoAgain();
+    zqSetEvolution(evo);
+  };
+
+  function bindStrict(){
+    const map={zqEvoBlue:"Bleu",zqEvoRed:"Rouge",zqEvoGreen:"Vert",zqEvoBlack:"Noir",zqEvoGold:"Doré"};
+    for(const [id,evo] of Object.entries(map)){
+      const b=document.getElementById(id);
+      if(!b) continue;
+      b.onclick=function(ev){
+        ev.preventDefault();
+        ev.stopImmediatePropagation();
+        window.zqV325EvolutionClick(evo);
+        return false;
+      };
+    }
+  }
+  setTimeout(bindStrict,900);
+  setInterval(bindStrict,500);
+})();
 
 </script>
 </body>
