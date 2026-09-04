@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.25.1 DEV</title>
+<title>Zack Quest — V3.26 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.25.1 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.26 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
 <div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
@@ -238,7 +238,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.25.1 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.26 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -1190,7 +1190,7 @@ function zqV325Bind(){
 /* Le panneau se rerend régulièrement dans cette version :
    on reverrouille donc les handlers après chaque rendu. */
 setTimeout(zqV325Bind,600);
-setInterval(zqV325Bind,700);
+/* V3.26: ancien rebinding DEV désactivé */
 
 
 /* ===== V3.25.1 — LOCK STRICT DU GOBELIN ROUGE ===== */
@@ -1250,7 +1250,41 @@ setInterval(zqV325Bind,700);
     }
   }
   setTimeout(bindStrict,900);
-  setInterval(bindStrict,500);
+  /* V3.26: lock validé, polling DEV désactivé */
+})();
+
+
+/* ===== V3.26 — GOBELIN ROUGE VALIDÉ ===== */
+(function(){
+  function v326Bind(){
+    const heroGob=document.querySelector('.hero-option[data-hero="goblin"]');
+    const heroTocado=document.querySelector('.hero-option[data-hero="tocadobleu"]');
+    const original=document.getElementById("zqEvoBlue");
+    const red=document.getElementById("zqEvoRed");
+
+    if(original) original.addEventListener("click",function(){
+      if(zqActiveHero()==="goblin") setTimeout(()=>zqV325ShowGoblin("Bleu"),0);
+    },true);
+
+    if(red) red.addEventListener("click",function(){
+      if(zqActiveHero()==="goblin") setTimeout(()=>zqV325ShowGoblin("Rouge"),0);
+    },true);
+
+    if(heroGob) heroGob.addEventListener("click",function(){
+      setTimeout(()=>{
+        zqUpdateBranchLabels();
+        zqV325ShowGoblin("Bleu");
+      },40);
+    },true);
+
+    if(heroTocado) heroTocado.addEventListener("click",function(){
+      setTimeout(()=>{
+        zqUpdateBranchLabels();
+        zqShowTocadoAgain();
+      },40);
+    },true);
+  }
+  setTimeout(v326Bind,700);
 })();
 
 </script>
