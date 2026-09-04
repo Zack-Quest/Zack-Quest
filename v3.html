@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.13.3</title>
+<title>Zack Quest — V3.13.4</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.3</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.4</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -224,7 +224,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.3 • yeux précis • équipements visibles</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.4 • cape recolorée • yeux précis</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -557,8 +557,33 @@ function renderKnightPixels(){
   }
   ctx.putImageData(frame,0,0);
 
-  // V3.13.3 : on conserve la cape d’origine du chevalier.
-  // Le déblocage à 1 000 XP permet uniquement d’en changer la couleur.
+  // V3.13.4 : recoloration de la cape DÉJÀ présente dans l’image.
+  // Masque couleur localisé sur les pixels bleus de la cape à droite du personnage,
+  // en excluant le bouclier, l’épée, le foulard et les zones bleues du décor.
+  if(zqCapeUnlocked()){
+    const capeTargets={
+      "Bleue":[47,126,230],"Rouge":[201,54,69],"Verte":[58,155,99],
+      "Violette":[119,87,200],"Noire":[37,40,58],"Dorée":[215,166,46]
+    };
+    const capeTarget=capeTargets[zqCapeColor()]||capeTargets.Bleue;
+    for(let y=0;y<h;y++){
+      for(let x=0;x<w;x++){
+        const p=(y*w+x)*4, r=frame.data[p], g=frame.data[p+1], b=frame.data[p+2];
+        // Zone normalisée correspondant au tissu de cape visible derrière le bouclier/jambe droite.
+        const nx=x/w, ny=y/h;
+        const inCapeZone = nx>0.64 && nx<0.97 && ny>0.43 && ny<0.91;
+        // Pixels bleus/cyan suffisamment saturés : garde les ombres et plis d’origine.
+        const bluePixel = b>r*1.18 && b>g*1.03 && (b-r)>24 && b>70;
+        // Exclusions géométriques : bouclier (haut/centre) et sol lumineux (bas).
+        const shieldExclusion = nx<0.86 && ny<0.72;
+        const floorExclusion = ny>0.86;
+        if(inCapeZone && bluePixel && !shieldExclusion && !floorExclusion){
+          tintMaskedPixel(frame.data,p,capeTarget,zqCapeColor()==="Bleue"?0.18:0.92);
+        }
+      }
+    }
+    ctx.putImageData(frame,0,0);
+  }
 
   // 2) CHEVEUX = ACCESSOIRE INDÉPENDANT superposé au personnage.
   const hctx=hairCanvas.getContext("2d",{willReadFrequently:true});
@@ -661,7 +686,7 @@ function zqCapeUnlocked(){const u=zqUnlockStorage();return !!u.capeColors||zqCur
 function zqCapeColor(){return zqEquipmentState().capeColor||"Bleue"}
 function zqSetCapeColor(name){
   if(!zqCapeUnlocked()){toast("🔒 Couleurs encore verrouillées");return}
-  const e=zqEquipmentState();e.capeColor=name;zqSaveEquipment(e);toast("🎨 Cape "+name.toLowerCase()+" sélectionnée !");zqRenderInventory();
+  const e=zqEquipmentState();e.capeColor=name;zqSaveEquipment(e);toast("🎨 Cape "+name.toLowerCase()+" sélectionnée !");zqRenderInventory();renderKnightPixels();
 }
 function zqRenderInventory(){
   const unlocked=zqCapeUnlocked(), current=zqCapeColor();
