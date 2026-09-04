@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.24 DEV</title>
+<title>Zack Quest — V3.25 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.24 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.25 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
 <div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
@@ -238,7 +238,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.24 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.25 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -1124,6 +1124,73 @@ function zqBindEvolutionBranches(){
   if(red) red.addEventListener("click",()=>{ if(zqActiveHero()==="goblin") setTimeout(()=>zqShowGoblinForm("red"),0); });
 }
 setTimeout(zqBindEvolutionBranches,350);
+
+
+
+/* ===== V3.25 — VERROUILLAGE DES ILLUSTRATIONS PAR BRANCHE =====
+   Corrige le conflit avec l'ancien système Tocado :
+   - Gobelin Original reste Gobelin Original
+   - Gobelin Rouge reste Berserker
+   - revenir sur Original restaure bien l'Original
+   - Tocado conserve ses 5 évolutions
+*/
+function zqV325ShowGoblin(form){
+  const layer=document.getElementById("zqIllustratedHero");
+  const img=document.getElementById("zqIllustratedHeroImg");
+  const pt=document.getElementById("previewType");
+  if(!layer || !img) return;
+
+  if(form==="Rouge"){
+    img.src=ZQ_GOBLIN_BERSERKER;
+    if(pt) pt.textContent="Gobelin Rouge — Berserker";
+    try{toast("🔥 Gobelin Rouge — Berserker")}catch(e){}
+  } else {
+    img.src=ZQ_GOBLIN_V1;
+    if(pt) pt.textContent="Gobelin — Malin et imprévisible";
+    try{toast("👹 Gobelin — Original")}catch(e){}
+  }
+  layer.style.display="block";
+}
+
+function zqV325EvolutionClick(evo){
+  if(zqActiveHero()==="goblin"){
+    // Pour l'instant seules les illustrations Original + Rouge sont intégrées.
+    // Les autres boutons restent prêts pour les prochains visuels.
+    if(evo==="Bleu") return zqV325ShowGoblin("Bleu");
+    if(evo==="Rouge") return zqV325ShowGoblin("Rouge");
+    try{toast("👹 "+zqBranchLabels("goblin")[evo==="Vert"?"green":evo==="Noir"?"black":"gold"]+" — illustration à intégrer")}catch(e){}
+    return;
+  }
+
+  // Branche Tocado inchangée.
+  zqShowTocadoAgain();
+  zqSetEvolution(evo);
+}
+
+function zqV325Bind(){
+  const map={
+    zqEvoBlue:"Bleu",
+    zqEvoRed:"Rouge",
+    zqEvoGreen:"Vert",
+    zqEvoBlack:"Noir",
+    zqEvoGold:"Doré"
+  };
+  Object.entries(map).forEach(([id,evo])=>{
+    const b=document.getElementById(id);
+    if(!b) return;
+    b.onclick=(ev)=>{
+      ev.preventDefault();
+      ev.stopPropagation();
+      zqV325EvolutionClick(evo);
+    };
+  });
+  zqUpdateBranchLabels();
+}
+
+/* Le panneau se rerend régulièrement dans cette version :
+   on reverrouille donc les handlers après chaque rendu. */
+setTimeout(zqV325Bind,600);
+setInterval(zqV325Bind,700);
 
 </script>
 </body>
