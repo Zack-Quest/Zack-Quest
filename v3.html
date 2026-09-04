@@ -224,7 +224,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.4 • cape recolorée • yeux précis</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.4 FINAL • couleurs de cape vives • yeux précis</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -562,8 +562,12 @@ function renderKnightPixels(){
   // en excluant le bouclier, l’épée, le foulard et les zones bleues du décor.
   if(zqCapeUnlocked()){
     const capeTargets={
-      "Bleue":[47,126,230],"Rouge":[201,54,69],"Verte":[58,155,99],
-      "Violette":[119,87,200],"Noire":[37,40,58],"Dorée":[215,166,46]
+      "Bleue":[28,112,255],
+      "Rouge":[245,45,58],
+      "Verte":[28,190,86],
+      "Violette":[150,55,245],
+      "Noire":[25,28,42],
+      "Dorée":[245,183,42]
     };
     const capeTarget=capeTargets[zqCapeColor()]||capeTargets.Bleue;
     for(let y=0;y<h;y++){
@@ -678,7 +682,7 @@ setInterval(zqRenderFirstUnlock,1200);
 
 /* V3.13.3 — couleurs de la cape existante */
 const ZQ_CAPE_COLORS=[
-  ["Bleue","#2f7ee6"],["Rouge","#c93645"],["Verte","#3a9b63"],["Violette","#7757c8"],["Noire","#25283a"],["Dorée","#d7a62e"]
+  ["Bleue","#1c70ff"],["Rouge","#f52d3a"],["Verte","#1cbe56"],["Violette","#9637f5"],["Noire","#191c2a"],["Dorée","#f5b72a"]
 ];
 function zqEquipmentState(){try{return JSON.parse(localStorage.getItem("zackquest_equipment")||"{}")}catch(e){return{}}}
 function zqSaveEquipment(v){localStorage.setItem("zackquest_equipment",JSON.stringify(v))}
