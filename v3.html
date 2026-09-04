@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.19.1 DEV</title>
+<title>Zack Quest — V3.19.2 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.19.1 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.19.2 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -232,7 +232,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.19.1 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.19.2 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -921,29 +921,43 @@ function zqRenderEvolutionPanel(){
     document.getElementById("zqEvoGold").onclick=()=>zqSetEvolution("Doré");
     const gv1=document.getElementById("zqGoblinV1");
     if(gv1) gv1.onclick=()=>{
+      const stage=document.getElementById("avatarStage");
       const canvas=document.getElementById("officialKnightCanvas");
       const hairCanvas=document.getElementById("officialKnightHair");
-      const stage=document.getElementById("avatarStage");
-      if(!canvas) return;
-      if(hairCanvas) hairCanvas.style.display="none";
-      if(stage) stage.dataset.hero="Gobelin";
-      stage?.querySelectorAll(".chibi-cape,.chibi-body,.chibi-head,.chibi-hair,.chibi-eye,.chibi-mouth,.chibi-glasses,.chibi-emblem,.chibi-badge")
-        .forEach(el=>el.style.display="none");
+      if(!stage || !canvas) return;
+
+      // Hide every legacy avatar layer (including the famous invisible glasses 😄)
+      stage.querySelectorAll("*").forEach(el=>{
+        if(el!==canvas && !canvas.contains(el)) {
+          if(el.tagName!=="CANVAS") el.style.visibility="hidden";
+        }
+      });
+      if(hairCanvas){ hairCanvas.style.display="none"; hairCanvas.style.visibility="hidden"; }
+
+      // Put Goblin on the exact fixed-art canvas used by Tocado.
+      canvas.style.display="block";
+      canvas.style.visibility="visible";
+      canvas.style.opacity="1";
+      canvas.style.position="relative";
+      canvas.style.zIndex="50";
       const ctx=canvas.getContext("2d");
-      const img=new Image();
-      img.onload=()=>{
-        canvas.width=341; canvas.height=430;
-        ctx.clearRect(0,0,341,430);
-        const sw=img.naturalWidth, sh=img.naturalHeight;
-        const target=341/430, ratio=sw/sh;
+      const pic=new Image();
+      pic.onload=()=>{
+        const W=341,H=430;
+        canvas.width=W; canvas.height=H;
+        ctx.clearRect(0,0,W,H);
+        const sw=pic.naturalWidth, sh=pic.naturalHeight;
+        const tr=W/H, sr=sw/sh;
         let sx=0,sy=0,cw=sw,ch=sh;
-        if(ratio>target){cw=sh*target;sx=(sw-cw)/2}
-        else{ch=sw/target;sy=(sh-ch)/2}
-        ctx.drawImage(img,sx,sy,cw,ch,0,0,341,430);
+        if(sr>tr){ cw=sh*tr; sx=(sw-cw)/2; }
+        else { ch=sw/tr; sy=(sh-ch)/2; }
+        ctx.drawImage(pic,sx,sy,cw,ch,0,0,W,H);
       };
-      img.src=ZQ_GOBLIN_V1;
-      document.getElementById("previewType").textContent="Gobelin — Malin et imprévisible";
-      toast("👹 Gobelin V1 — aperçu DEV");
+      pic.src=ZQ_GOBLIN_V1;
+
+      const pt=document.getElementById("previewType");
+      if(pt) pt.textContent="Gobelin — Malin et imprévisible";
+      toast("👹 Gobelin V1 — visible cette fois 😄");
     };
   }
 
