@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.27.2 DEV</title>
+<title>Zack Quest — V3.27.3 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.27.2 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.27.3 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
 <div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
@@ -236,7 +236,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.27.2 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.27.3 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -1299,6 +1299,33 @@ setTimeout(zqV325Bind,600);
     },true);
   }
   setTimeout(v326Bind,700);
+})();
+
+
+/* ===== V3.27.3 — CORRECTIF ORIGINAL EN 1 CLIC =====
+   Correctif isolé : le bouton Original décide immédiatement de la branche
+   active et affiche la bonne illustration sans attendre un second clic.
+*/
+(function(){
+  function zqFixOriginalOneClick(){
+    const original=document.getElementById("zqEvoBlue");
+    if(!original || original.dataset.zqOneClickFix==="1") return;
+    original.dataset.zqOneClickFix="1";
+
+    original.addEventListener("click",function(ev){
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+
+      if(zqActiveHero()==="goblin"){
+        window.zqV325ShowGoblin("Bleu");
+      }else{
+        zqShowTocadoAgain();
+        zqSetEvolution("Bleu");
+      }
+      return false;
+    },true);
+  }
+  setTimeout(zqFixOriginalOneClick,1100);
 })();
 
 </script>
