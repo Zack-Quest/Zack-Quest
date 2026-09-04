@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.28 DEV</title>
+<title>Zack Quest — V3.29 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.28 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.29 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
 <div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
@@ -236,7 +236,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.28 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.29 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -1405,6 +1405,93 @@ setTimeout(zqV325Bind,600);
   }
 
   setTimeout(zqV328Init,1400);
+})();
+
+
+
+/* ===== V3.29 — TOCADO ORIGINAL = ILLUSTRATION COMPLÈTE =====
+   Le Bleu/Original n'utilise plus l'ancien moteur cheveux/cape/bouclier.
+   Il est dessiné comme Rouge/Vert/Noir/Doré, tout en gardant :
+   - couleur des yeux
+   - lunettes
+*/
+(function(){
+  const previousRenderer = renderKnightPixels;
+
+  renderKnightPixels = function(){
+    const evo = zqCurrentEvolution();
+
+    // Rouge / Vert / Noir / Doré : on garde exactement le moteur validé.
+    if(evo !== "Bleu"){
+      return previousRenderer();
+    }
+
+    if(!zqPixelsReady) return;
+
+    const canvas = document.getElementById("officialKnightCanvas");
+    const hairCanvas = document.getElementById("officialKnightHair");
+    if(!canvas || !zqBaseImg || !zqEyeMask) return;
+
+    // Original devient lui aussi une illustration complète : plus de couche cheveux séparée.
+    if(hairCanvas){
+      hairCanvas.style.display = "none";
+      const hc = hairCanvas.getContext("2d");
+      hc.clearRect(0,0,hairCanvas.width,hairCanvas.height);
+    }
+
+    const w = zqBaseImg.naturalWidth;
+    const h = zqBaseImg.naturalHeight;
+    const ctx = canvas.getContext("2d",{willReadFrequently:true});
+    canvas.width = w;
+    canvas.height = h;
+    ctx.clearRect(0,0,w,h);
+    ctx.drawImage(zqBaseImg,0,0,w,h);
+
+    // On conserve uniquement la personnalisation des yeux.
+    const frame = ctx.getImageData(0,0,w,h);
+    const tmp = document.createElement("canvas");
+    tmp.width = w; tmp.height = h;
+    const tctx = tmp.getContext("2d",{willReadFrequently:true});
+    tctx.drawImage(zqEyeMask,0,0,w,h);
+    const em = tctx.getImageData(0,0,w,h).data;
+    const ec = targetEyeColor(tempLook.eyes || "Bleu");
+
+    for(let p=0;p<frame.data.length;p+=4){
+      if(em[p] > 90) tintMaskedPixel(frame.data,p,ec,0.98);
+    }
+    ctx.putImageData(frame,0,0);
+
+    // IMPORTANT : on n'appelle plus l'ancien rendu cheveux/cape/bouclier.
+  };
+
+  function forceOriginalOneClick(){
+    const b=document.getElementById("zqEvoBlue");
+    if(!b || b.dataset.zqV329==="1") return;
+    b.dataset.zqV329="1";
+
+    b.addEventListener("click",function(ev){
+      if(zqActiveHero()!=="tocado") return;
+      ev.preventDefault();
+      ev.stopImmediatePropagation();
+
+      const e=zqEvolutionState();
+      e.tocado="Bleu";
+      zqSaveEvolution(e);
+
+      const layer=document.getElementById("zqIllustratedHero");
+      if(layer) layer.style.display="none";
+
+      const pt=document.getElementById("previewType");
+      if(pt) pt.textContent="Chevalier — Brave et protecteur";
+
+      renderKnightPixels();
+      zqRenderEvolutionPanel();
+      try{toast("🛡️ Tocado Bleu — Original équipé !")}catch(e){}
+      return false;
+    },true);
+  }
+
+  setTimeout(forceOriginalOneClick,1500);
 })();
 
 </script>
