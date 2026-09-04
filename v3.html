@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.13</title>
+<title>Zack Quest — V3.13.1</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -67,7 +67,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .visual-status{font-size:12px;color:#aeb9e8;margin-top:7px}
 @media(max-width:800px){.avatar-stage[data-hero="Chevalier"]{width:250px;height:315px}}
 
-/* V3.13 — rendu pixel précis cheveux + iris */
+/* V3.13.1 — rendu pixel précis cheveux + iris */
 .official-knight-canvas,.official-knight-hair{
   width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:24px;
   display:none;position:absolute;inset:0;z-index:20
@@ -85,7 +85,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .official-knight-canvas{z-index:21}
 
 
-/* ===== ZACK QUEST V3.13 : PREMIER DÉBLOCAGE RÉEL ===== */
+/* ===== ZACK QUEST V3.13.1 : PREMIER DÉBLOCAGE RÉEL ===== */
 .zq-unlock-card{
   margin-top:16px;padding:16px;border:1px solid #3b82f6;border-radius:18px;
   background:linear-gradient(135deg,rgba(13,35,78,.96),rgba(20,47,103,.92));
@@ -117,15 +117,83 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .zq-levelup-toast p{margin:5px 0;color:#e6efff}
 
 
-/* V3.13 INVENTAIRE */
+/* V3.13.1 INVENTAIRE */
 .zq-inventory{margin-top:14px;padding:14px;border:1px solid #5265bf;border-radius:16px;background:#0d1535}.zq-inventory-item{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px;border:1px solid #4058a8;border-radius:14px}.zq-inventory-info{flex:1}.zq-equip{border:1px solid #7b8ee8;background:#263778;color:white;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer}.zq-equip.on{background:linear-gradient(90deg,#ffd451,#ff9e42);color:#1b1630}.zq-equip:disabled{opacity:.4}.zq-cape-badge{position:absolute;left:7px;bottom:8px;z-index:30;font-size:42px;display:none}.avatar-stage.cape-equipped .zq-cape-badge{display:block}
+
+/* ===== V3.13.1 : ÉQUIPEMENTS VISIBLES DANS "MON HÉROS" ===== */
+.creator-equipment{
+  margin-top:16px;
+  padding:14px;
+  border:1px solid #5265bf;
+  border-radius:16px;
+  background:linear-gradient(145deg,#0d1535,#111b45);
+}
+.creator-equipment h2{
+  color:#ffd451;
+  font-size:17px;
+  margin:0 0 6px;
+}
+.creator-equipment .equip-help{
+  color:#aeb9e8;
+  font-size:12px;
+  margin-bottom:10px;
+}
+.creator-equip-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border:1px solid #4058a8;
+  border-radius:14px;
+  background:#10183a;
+}
+.creator-equip-icon{
+  width:54px;height:54px;
+  display:grid;place-items:center;
+  border-radius:13px;
+  background:#17234f;
+  font-size:34px;
+  border:1px solid #5368cf;
+}
+.creator-equip-info{flex:1}
+.creator-equip-info b{display:block}
+.creator-equip-info small{display:block;margin-top:3px;color:#aeb9e8}
+.creator-equip-btn{
+  border:1px solid #7b8ee8;
+  background:#263778;
+  color:white;
+  border-radius:10px;
+  padding:9px 12px;
+  font-weight:900;
+  cursor:pointer;
+}
+.creator-equip-btn.on{
+  background:linear-gradient(90deg,#ffd451,#ff9e42);
+  color:#1b1630;
+}
+.creator-equip-btn:disabled{opacity:.4;cursor:not-allowed}
+.equip-unlocked-glow{
+  box-shadow:0 0 18px rgba(255,212,81,.20);
+  border-color:#ffd451;
+}
+
+/* Petit indicateur de cape équipée dans l'aperçu */
+.zq-cape-badge{
+  transition:.2s ease;
+}
+.avatar-stage.cape-equipped .zq-cape-badge{
+  display:block;
+  transform:scale(1.08);
+  filter:drop-shadow(0 0 8px #ffd451aa);
+}
+
 </style>
 </head>
 <body>
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.1</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -134,7 +202,21 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
         <div class="custom-row"><div class="custom-label">👁️ Yeux</div><div class="option-list" id="eyeOptions"></div></div>
         <div class="custom-row"><div class="custom-label">🙂 Peau</div><div class="option-list" id="skinOptions"></div></div>
         <div class="custom-row"><div class="custom-label">👓 Lunettes</div><div class="option-list" id="glassesOptions"></div></div>
-      </div></div>
+      </div>
+
+      <div class="creator-equipment" id="creatorEquipment">
+        <h2>4 — 🎒 Équipements de Tocado</h2>
+        <div class="equip-help">Les objets débloqués avec les XP peuvent être équipés ici.</div>
+        <div class="creator-equip-item" id="creatorCapeItem">
+          <div class="creator-equip-icon">🧣</div>
+          <div class="creator-equip-info">
+            <b>Cape de l’Aventurier</b>
+            <small id="creatorCapeState">🔒 Se débloque à 1 000 XP</small>
+          </div>
+          <button id="creatorCapeEquipBtn" class="creator-equip-btn" onclick="zqToggleCape()" disabled>ÉQUIPER</button>
+        </div>
+      </div>
+      </div>
     <div class="creator-bottom">
       <div class="preview"><div class="avatar-stage" id="avatarStage" data-hero="Chevalier"><canvas id="officialKnightCanvas" class="official-knight-canvas" width="341" height="430" aria-label="Chevalier Zack Quest"></canvas><canvas id="officialKnightHair" class="official-knight-hair" width="341" height="430" aria-hidden="true"></canvas><div class="zq-cape-badge">🧣</div>
 <div class="chibi-cape"></div><div class="chibi-body"></div>
@@ -142,7 +224,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13 • cheveux et iris modifiés au pixel près</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.1 • cheveux et iris modifiés au pixel près</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -335,7 +417,7 @@ function updateAvatarPreview(){
 }
 function renderHeroChoices(){const e=document.getElementById("heroChoices");e.innerHTML="";heroes.forEach((h,i)=>{const b=document.createElement("button");b.className="hero-choice"+(selectedHeroIndex===i?" selected":"");b.innerHTML=`<span class="hero-icon">${h[1]}</span><div class="hero-name">${h[0]}</div><div class="hero-desc">${h[2]}</div>`;b.onclick=()=>selectHero(i);e.appendChild(b)})}
 function applyHeroPreview(h){const stage=document.getElementById("avatarStage");if(stage)stage.dataset.hero=h[0];document.getElementById("previewAvatar").textContent=h[1];document.getElementById("previewEmblem").textContent=h[1]}
-function selectHero(i){selectedHeroIndex=i;const h=heroes[i];applyHeroPreview(h);document.getElementById("previewType").textContent=h[0]+" — "+h[2];updateAvatarPreview();renderKnightPixels();updateCreator();renderHeroChoices()}
+function selectHero(i){selectedHeroIndex=i;const h=heroes[i];applyHeroPreview(h);document.getElementById("previewType").textContent=h[0]+" — "+h[2];updateAvatarPreview();renderKnightPixels();updateCreator();renderHeroChoices();zqRenderInventory()}
 function updateCreator(){const name=document.getElementById("pseudoInput").value.trim();document.getElementById("previewName").textContent=name||"Ton héros";document.getElementById("startHero").disabled=!(name&&selectedHeroIndex>=0)}
 function showCreator(){document.getElementById("creator").classList.remove("hidden");document.getElementById("mainApp").classList.add("hidden");document.getElementById("pseudoInput").value=s.profile?.pseudo||"";selectedHeroIndex=heroes.findIndex(h=>h[0]===s.profile?.heroType);
   tempLook=Object.assign({hair:"Brun",eyes:"Marron",skin:"Clair",glasses:"Aucune"},s.profile?.look||{});
@@ -344,6 +426,7 @@ function hideCreator(){document.getElementById("creator").classList.add("hidden"
 function saveHero(){const name=document.getElementById("pseudoInput").value.trim();if(!name||selectedHeroIndex<0)return;const h=heroes[selectedHeroIndex];s.profile={pseudo:name,heroType:h[0],heroIcon:h[1],look:{...tempLook}};save();hideCreator();render();toast("⚔️ Héros enregistré !")}
 function editHero(){
   showCreator();
+  zqRenderInventory();
   setTimeout(()=>document.getElementById("pseudoInput").focus(),50);
 }
 document.addEventListener("input",e=>{if(e.target.id==="pseudoInput")updateCreator()});
@@ -467,7 +550,7 @@ render();
 initKnightRenderer();
 if(!s.profile||!s.profile.pseudo||!s.profile.heroType){showCreator()}else{hideCreator()}
 
-/* ===== V3.13 : premier déblocage à 1000 XP ===== */
+/* ===== V3.13.1 : premier déblocage à 1000 XP ===== */
 const ZQ_FIRST_UNLOCK_XP = 1000;
 function zqCurrentXP(){
   try{
@@ -520,13 +603,39 @@ setTimeout(zqRenderFirstUnlock,250);
 setInterval(zqRenderFirstUnlock,1200);
 
 
-/* V3.13 equipement */
+/* V3.13.1 equipement */
 function zqEquipmentState(){try{return JSON.parse(localStorage.getItem("zackquest_equipment")||"{}")}catch(e){return{}}}
 function zqSaveEquipment(v){localStorage.setItem("zackquest_equipment",JSON.stringify(v))}
 function zqCapeUnlocked(){const u=zqUnlockStorage();return !!u.capeAventurier||zqCurrentXP()>=1000}
 function zqCapeEquipped(){return zqEquipmentState().cape==="capeAventurier"}
 function zqToggleCape(){if(!zqCapeUnlocked()){toast("🔒 Cape encore verrouillée");return}const e=zqEquipmentState();if(e.cape==="capeAventurier"){delete e.cape;toast("🧣 Cape retirée")}else{e.cape="capeAventurier";toast("⚔️ Cape équipée !")}zqSaveEquipment(e);zqRenderInventory()}
-function zqRenderInventory(){const u=zqCapeUnlocked(),q=zqCapeEquipped(),st=document.getElementById("capeState"),b=document.getElementById("capeEquipBtn");if(st)st.textContent=!u?"🔒 Se débloque à 1 000 XP":q?"✅ Équipée sur Tocado":"🔓 Débloquée — prête à équiper";if(b){b.disabled=!u;b.textContent=q?"RETIRER":"ÉQUIPER";b.classList.toggle("on",q)}const a=document.getElementById("avatarStage");if(a)a.classList.toggle("cape-equipped",q)}
+function zqRenderInventory(){
+  const u=zqCapeUnlocked(),q=zqCapeEquipped();
+  const label=!u?"🔒 Se débloque à 1 000 XP":q?"✅ Équipée sur Tocado":"🔓 Débloquée — prête à équiper";
+
+  const states=[
+    document.getElementById("capeState"),
+    document.getElementById("creatorCapeState")
+  ];
+  states.forEach(st=>{if(st)st.textContent=label});
+
+  const buttons=[
+    document.getElementById("capeEquipBtn"),
+    document.getElementById("creatorCapeEquipBtn")
+  ];
+  buttons.forEach(b=>{
+    if(!b)return;
+    b.disabled=!u;
+    b.textContent=q?"RETIRER":"ÉQUIPER";
+    b.classList.toggle("on",q);
+  });
+
+  const creatorItem=document.getElementById("creatorCapeItem");
+  if(creatorItem)creatorItem.classList.toggle("equip-unlocked-glow",u);
+
+  const a=document.getElementById("avatarStage");
+  if(a)a.classList.toggle("cape-equipped",q);
+}
 document.addEventListener("click",()=>setTimeout(zqRenderInventory,100));setTimeout(zqRenderInventory,300);setInterval(zqRenderInventory,1400);
 </script>
 </body>
