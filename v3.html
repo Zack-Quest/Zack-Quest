@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.13.4</title>
+<title>Zack Quest — V3.13.5</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.4</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.5</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -215,6 +215,14 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
             <div id="creatorCapeColors" class="option-list" style="margin-top:8px"></div>
           </div>
         </div>
+        <div class="creator-equip-item" id="creatorShieldItem" style="margin-top:10px">
+          <div class="creator-equip-icon">🛡️</div>
+          <div class="creator-equip-info">
+            <b>Couleurs du bouclier</b>
+            <small id="creatorShieldState">🔒 Se débloquent à 2 000 XP</small>
+            <div id="creatorShieldColors" class="option-list" style="margin-top:8px"></div>
+          </div>
+        </div>
       </div>
       </div>
     <div class="creator-bottom">
@@ -224,7 +232,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.4 FINAL • couleurs de cape vives • yeux précis</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🛡️ V3.13.5 • cape + bouclier personnalisables • yeux précis</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -259,7 +267,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 </div>
 <div class="side">
 <div class="panel"><h2>🏆 PROGRESSION</h2><div class="rank" id="rank"></div><div class="sub" id="next"></div></div>
-<div class="panel"><h2>🎁 RÉCOMPENSES</h2><div id="shop"></div></div><div class="zq-inventory"><h2>🎒 INVENTAIRE DE TOCADO</h2><div class="sub">Les équipements gagnés avec les XP apparaissent ici.</div><div class="zq-inventory-item"><div style="font-size:34px">🎨</div><div class="zq-inventory-info"><b>Couleurs de cape</b><small id="capeState" class="sub">🔒 Se débloquent à 1 000 XP</small><div id="capeColors" class="option-list" style="margin-top:8px"></div></div></div></div>
+<div class="panel"><h2>🎁 RÉCOMPENSES</h2><div id="shop"></div></div><div class="zq-inventory"><h2>🎒 INVENTAIRE DE TOCADO</h2><div class="sub">Les équipements gagnés avec les XP apparaissent ici.</div><div class="zq-inventory-item"><div style="font-size:34px">🎨</div><div class="zq-inventory-info"><b>Couleurs de cape</b><small id="capeState" class="sub">🔒 Se débloquent à 1 000 XP</small><div id="capeColors" class="option-list" style="margin-top:8px"></div></div></div><div class="zq-inventory-item"><div style="font-size:34px">🛡️</div><div class="zq-inventory-info"><b>Couleurs du bouclier</b><small id="shieldState" class="sub">🔒 Se débloquent à 2 000 XP</small><div id="shieldColors" class="option-list" style="margin-top:8px"></div></div></div></div>
 </div>
 </div>
 </section>
@@ -589,6 +597,35 @@ function renderKnightPixels(){
     ctx.putImageData(frame,0,0);
   }
 
+  // V3.13.5 : recoloration UNIQUEMENT du fond bleu du bouclier.
+  // Le lion blanc et la bordure dorée sont préservés car seuls les pixels bleus
+  // situés dans la zone du bouclier sont recolorés.
+  if(zqShieldUnlocked()){
+    const shieldTargets={
+      "Bleu":[28,112,255],
+      "Rouge":[245,45,58],
+      "Vert":[28,190,86],
+      "Violet":[150,55,245],
+      "Noir":[25,28,42],
+      "Doré":[245,183,42]
+    };
+    const shieldTarget=shieldTargets[zqShieldColor()]||shieldTargets.Bleu;
+    for(let y=0;y<h;y++){
+      for(let x=0;x<w;x++){
+        const p=(y*w+x)*4, r=frame.data[p], g=frame.data[p+1], b=frame.data[p+2];
+        const nx=x/w, ny=y/h;
+        // Zone serrée autour de la face interne du bouclier de Tocado.
+        const inShieldZone = nx>0.58 && nx<0.94 && ny>0.36 && ny<0.72;
+        // Le fond est bleu/cyan. Le lion blanc et l'or ne passent pas ce filtre.
+        const blueShieldPixel = b>r*1.16 && b>g*1.02 && (b-r)>22 && b>72;
+        if(inShieldZone && blueShieldPixel){
+          tintMaskedPixel(frame.data,p,shieldTarget,zqShieldColor()==="Bleu"?0.18:0.94);
+        }
+      }
+    }
+    ctx.putImageData(frame,0,0);
+  }
+
   // 2) CHEVEUX = ACCESSOIRE INDÉPENDANT superposé au personnage.
   const hctx=hairCanvas.getContext("2d",{willReadFrequently:true});
   hairCanvas.width=w; hairCanvas.height=h;
@@ -707,6 +744,33 @@ function zqRenderInventory(){
   const creatorItem=document.getElementById("creatorCapeItem");if(creatorItem)creatorItem.classList.toggle("equip-unlocked-glow",unlocked);
 }
 document.addEventListener("click",()=>setTimeout(zqRenderInventory,100));setTimeout(zqRenderInventory,300);setInterval(zqRenderInventory,1400);
+
+/* V3.13.5 — couleurs du bouclier : fond uniquement, lion blanc + bordure dorée conservés */
+const ZQ_SHIELD_COLORS=[
+  ["Bleu","#1c70ff"],["Rouge","#f52d3a"],["Vert","#1cbe56"],["Violet","#9637f5"],["Noir","#191c2a"],["Doré","#f5b72a"]
+];
+function zqShieldUnlocked(){return zqCurrentXP()>=2000}
+function zqShieldColor(){return zqEquipmentState().shieldColor||"Bleu"}
+function zqSetShieldColor(name){
+  if(!zqShieldUnlocked()){toast("🔒 Bouclier encore verrouillé — 2 000 XP");return}
+  const e=zqEquipmentState();e.shieldColor=name;zqSaveEquipment(e);toast("🛡️ Bouclier "+name.toLowerCase()+" sélectionné !");zqRenderShieldInventory();renderKnightPixels();
+}
+function zqRenderShieldInventory(){
+  const unlocked=zqShieldUnlocked(), current=zqShieldColor();
+  const label=!unlocked?"🔒 Se débloquent à 2 000 XP":"🔓 Couleurs débloquées — "+current;
+  [document.getElementById("shieldState"),document.getElementById("creatorShieldState")].forEach(st=>{if(st)st.textContent=label});
+  [document.getElementById("shieldColors"),document.getElementById("creatorShieldColors")].forEach(box=>{
+    if(!box)return;box.innerHTML="";
+    ZQ_SHIELD_COLORS.forEach(([name,color])=>{
+      const b=document.createElement("button");b.className="opt"+(current===name?" selected":"");b.disabled=!unlocked;
+      b.innerHTML='<span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:'+color+';vertical-align:-2px;margin-right:5px"></span>'+name;
+      b.onclick=()=>zqSetShieldColor(name);box.appendChild(b);
+    });
+  });
+  const item=document.getElementById("creatorShieldItem");if(item)item.classList.toggle("equip-unlocked-glow",unlocked);
+}
+document.addEventListener("click",()=>setTimeout(zqRenderShieldInventory,110));
+setTimeout(zqRenderShieldInventory,320);setInterval(zqRenderShieldInventory,1450);
 </script>
 </body>
 </html>
