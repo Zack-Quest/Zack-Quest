@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.13.2</title>
+<title>Zack Quest — V3.13.3</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -67,7 +67,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .visual-status{font-size:12px;color:#aeb9e8;margin-top:7px}
 @media(max-width:800px){.avatar-stage[data-hero="Chevalier"]{width:250px;height:315px}}
 
-/* V3.13.2 — rendu pixel précis cheveux + iris */
+/* V3.13.3 — rendu pixel précis cheveux + iris */
 .official-knight-canvas,.official-knight-hair{
   width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:24px;
   display:none;position:absolute;inset:0;z-index:20
@@ -85,7 +85,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .official-knight-canvas{z-index:21}
 
 
-/* ===== ZACK QUEST V3.13.2 : PREMIER DÉBLOCAGE RÉEL ===== */
+/* ===== ZACK QUEST V3.13.3 : PREMIER DÉBLOCAGE RÉEL ===== */
 .zq-unlock-card{
   margin-top:16px;padding:16px;border:1px solid #3b82f6;border-radius:18px;
   background:linear-gradient(135deg,rgba(13,35,78,.96),rgba(20,47,103,.92));
@@ -117,10 +117,10 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 .zq-levelup-toast p{margin:5px 0;color:#e6efff}
 
 
-/* V3.13.2 INVENTAIRE */
+/* V3.13.3 INVENTAIRE */
 .zq-inventory{margin-top:14px;padding:14px;border:1px solid #5265bf;border-radius:16px;background:#0d1535}.zq-inventory-item{display:flex;align-items:center;gap:12px;margin-top:10px;padding:12px;border:1px solid #4058a8;border-radius:14px}.zq-inventory-info{flex:1}.zq-equip{border:1px solid #7b8ee8;background:#263778;color:white;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer}.zq-equip.on{background:linear-gradient(90deg,#ffd451,#ff9e42);color:#1b1630}.zq-equip:disabled{opacity:.4}.zq-cape-badge{position:absolute;left:7px;bottom:8px;z-index:30;font-size:42px;display:none}.avatar-stage.cape-equipped .zq-cape-badge{display:block}
 
-/* ===== V3.13.2 : ÉQUIPEMENTS VISIBLES DANS "MON HÉROS" ===== */
+/* ===== V3.13.3 : ÉQUIPEMENTS VISIBLES DANS "MON HÉROS" ===== */
 .creator-equipment{
   margin-top:16px;
   padding:14px;
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.2</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.13.3</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
@@ -208,12 +208,12 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
         <h2>4 — 🎒 Équipements de Tocado</h2>
         <div class="equip-help">Les objets débloqués avec les XP peuvent être équipés ici.</div>
         <div class="creator-equip-item" id="creatorCapeItem">
-          <div class="creator-equip-icon">🧣</div>
+          <div class="creator-equip-icon">🎨</div>
           <div class="creator-equip-info">
-            <b>Cape de l’Aventurier</b>
-            <small id="creatorCapeState">🔒 Se débloque à 1 000 XP</small>
+            <b>Couleurs de cape</b>
+            <small id="creatorCapeState">🔒 Se débloquent à 1 000 XP</small>
+            <div id="creatorCapeColors" class="option-list" style="margin-top:8px"></div>
           </div>
-          <button id="creatorCapeEquipBtn" class="creator-equip-btn" onclick="zqToggleCape()" disabled>ÉQUIPER</button>
         </div>
       </div>
       </div>
@@ -224,7 +224,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.2 • yeux précis • équipements visibles</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🎨 V3.13.3 • yeux précis • équipements visibles</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -259,7 +259,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 </div>
 <div class="side">
 <div class="panel"><h2>🏆 PROGRESSION</h2><div class="rank" id="rank"></div><div class="sub" id="next"></div></div>
-<div class="panel"><h2>🎁 RÉCOMPENSES</h2><div id="shop"></div></div><div class="zq-inventory"><h2>🎒 INVENTAIRE DE TOCADO</h2><div class="sub">Les équipements gagnés avec les XP apparaissent ici.</div><div class="zq-inventory-item"><div style="font-size:34px">🧣</div><div class="zq-inventory-info"><b>Cape de l’Aventurier</b><small id="capeState" class="sub">🔒 Se débloque à 1 000 XP</small></div><button id="capeEquipBtn" class="zq-equip" onclick="zqToggleCape()" disabled>ÉQUIPER</button></div></div>
+<div class="panel"><h2>🎁 RÉCOMPENSES</h2><div id="shop"></div></div><div class="zq-inventory"><h2>🎒 INVENTAIRE DE TOCADO</h2><div class="sub">Les équipements gagnés avec les XP apparaissent ici.</div><div class="zq-inventory-item"><div style="font-size:34px">🎨</div><div class="zq-inventory-info"><b>Couleurs de cape</b><small id="capeState" class="sub">🔒 Se débloquent à 1 000 XP</small><div id="capeColors" class="option-list" style="margin-top:8px"></div></div></div></div>
 </div>
 </div>
 </section>
@@ -294,9 +294,9 @@ box-shadow:0 8px 25px #0008;cursor:pointer">🧙 Mon héros</button>
     <div id="zqUnlockPill" class="zq-unlock-pill locked">🔒 1 000 XP</div>
   </div>
   <div id="zqUnlockItem" class="zq-unlock-item">
-    <div class="zq-unlock-icon">🧣</div>
+    <div class="zq-unlock-icon">🎨</div>
     <div>
-      <div class="zq-unlock-name">Cape de l’Aventurier</div>
+      <div class="zq-unlock-name">Couleurs de la cape</div>
       <div id="zqUnlockDesc" class="zq-unlock-desc">Encore quelques XP avant de la débloquer.</div>
     </div>
   </div>
@@ -306,7 +306,7 @@ box-shadow:0 8px 25px #0008;cursor:pointer">🧙 Mon héros</button>
 <div id="zqLevelupToast" class="zq-levelup-toast">
   <div class="big">🏆</div>
   <h2>NOUVEAU DÉBLOCAGE !</h2>
-  <p><strong>Cape de l’Aventurier</strong></p>
+  <p><strong>Nouvelles couleurs de cape</strong></p>
   <p>Tu as atteint 1 000 XP. Bien joué ! ⚔️</p>
 </div>
 
@@ -557,10 +557,8 @@ function renderKnightPixels(){
   }
   ctx.putImageData(frame,0,0);
 
-  // Équipement V3.13.2 : la cape est réellement visible sur Tocado.
-  if(typeof zqCapeEquipped==="function" && zqCapeEquipped()){
-    zqDrawAdventurerCape(ctx,w,h);
-  }
+  // V3.13.3 : on conserve la cape d’origine du chevalier.
+  // Le déblocage à 1 000 XP permet uniquement d’en changer la couleur.
 
   // 2) CHEVEUX = ACCESSOIRE INDÉPENDANT superposé au personnage.
   const hctx=hairCanvas.getContext("2d",{willReadFrequently:true});
@@ -600,7 +598,7 @@ render();
 initKnightRenderer();
 if(!s.profile||!s.profile.pseudo||!s.profile.heroType){showCreator()}else{hideCreator()}
 
-/* ===== V3.13.2 : premier déblocage à 1000 XP ===== */
+/* ===== V3.13.3 : premier déblocage à 1000 XP ===== */
 const ZQ_FIRST_UNLOCK_XP = 1000;
 function zqCurrentXP(){
   try{
@@ -630,13 +628,13 @@ function zqRenderFirstUnlock(){
   pill.className="zq-unlock-pill "+(ready?"ready":"locked");
   pill.textContent=ready?"🔓 DÉBLOQUÉ":"🔒 1 000 XP";
   desc.textContent=ready
-    ?"Débloquée ! Elle appartient maintenant à Tocado."
+    ?"Débloquées ! Tocado peut maintenant changer la couleur de sa cape."
     :"Plus que "+Math.max(0,ZQ_FIRST_UNLOCK_XP-xp)+" XP pour la débloquer.";
   note.textContent=xp+" / 1 000 XP • Tes XP et tes pièces restent conservés.";
 
   const u=zqUnlockStorage();
-  if(ready && !u.capeAventurier){
-    u.capeAventurier=true;
+  if(ready && !u.capeColors){
+    u.capeColors=true;
     zqSaveUnlocks(u);
     const pop=document.getElementById("zqLevelupToast");
     if(pop){
@@ -653,41 +651,31 @@ setTimeout(zqRenderFirstUnlock,250);
 setInterval(zqRenderFirstUnlock,1200);
 
 
-/* V3.13.2 equipement */
+/* V3.13.3 — couleurs de la cape existante */
+const ZQ_CAPE_COLORS=[
+  ["Bleue","#2f7ee6"],["Rouge","#c93645"],["Verte","#3a9b63"],["Violette","#7757c8"],["Noire","#25283a"],["Dorée","#d7a62e"]
+];
 function zqEquipmentState(){try{return JSON.parse(localStorage.getItem("zackquest_equipment")||"{}")}catch(e){return{}}}
 function zqSaveEquipment(v){localStorage.setItem("zackquest_equipment",JSON.stringify(v))}
-function zqCapeUnlocked(){const u=zqUnlockStorage();return !!u.capeAventurier||zqCurrentXP()>=1000}
-function zqCapeEquipped(){return zqEquipmentState().cape==="capeAventurier"}
-function zqToggleCape(){if(!zqCapeUnlocked()){toast("🔒 Cape encore verrouillée");return}const e=zqEquipmentState();if(e.cape==="capeAventurier"){delete e.cape;toast("🧣 Cape retirée")}else{e.cape="capeAventurier";toast("⚔️ Cape équipée !")}zqSaveEquipment(e);zqRenderInventory()}
+function zqCapeUnlocked(){const u=zqUnlockStorage();return !!u.capeColors||zqCurrentXP()>=1000}
+function zqCapeColor(){return zqEquipmentState().capeColor||"Bleue"}
+function zqSetCapeColor(name){
+  if(!zqCapeUnlocked()){toast("🔒 Couleurs encore verrouillées");return}
+  const e=zqEquipmentState();e.capeColor=name;zqSaveEquipment(e);toast("🎨 Cape "+name.toLowerCase()+" sélectionnée !");zqRenderInventory();
+}
 function zqRenderInventory(){
-  const u=zqCapeUnlocked(),q=zqCapeEquipped();
-  const label=!u?"🔒 Se débloque à 1 000 XP":q?"✅ Équipée sur Tocado":"🔓 Débloquée — prête à équiper";
-
-  const states=[
-    document.getElementById("capeState"),
-    document.getElementById("creatorCapeState")
-  ];
-  states.forEach(st=>{if(st)st.textContent=label});
-
-  const buttons=[
-    document.getElementById("capeEquipBtn"),
-    document.getElementById("creatorCapeEquipBtn")
-  ];
-  buttons.forEach(b=>{
-    if(!b)return;
-    b.disabled=!u;
-    b.textContent=q?"RETIRER":"ÉQUIPER";
-    b.classList.toggle("on",q);
+  const unlocked=zqCapeUnlocked(), current=zqCapeColor();
+  const label=!unlocked?"🔒 Se débloquent à 1 000 XP":"🔓 Couleurs débloquées — "+current;
+  [document.getElementById("capeState"),document.getElementById("creatorCapeState")].forEach(st=>{if(st)st.textContent=label});
+  [document.getElementById("capeColors"),document.getElementById("creatorCapeColors")].forEach(box=>{
+    if(!box)return;box.innerHTML="";
+    ZQ_CAPE_COLORS.forEach(([name,color])=>{
+      const b=document.createElement("button");b.className="opt"+(current===name?" selected":"");b.disabled=!unlocked;
+      b.innerHTML='<span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:'+color+';vertical-align:-2px;margin-right:5px"></span>'+name;
+      b.onclick=()=>zqSetCapeColor(name);box.appendChild(b);
+    });
   });
-
-  const creatorItem=document.getElementById("creatorCapeItem");
-  if(creatorItem)creatorItem.classList.toggle("equip-unlocked-glow",u);
-
-  const a=document.getElementById("avatarStage");
-  if(a)a.classList.toggle("cape-equipped",q);
-
-  // Redessine Tocado immédiatement pour afficher/retirer la cape.
-  if(typeof renderKnightPixels==="function") renderKnightPixels();
+  const creatorItem=document.getElementById("creatorCapeItem");if(creatorItem)creatorItem.classList.toggle("equip-unlocked-glow",unlocked);
 }
 document.addEventListener("click",()=>setTimeout(zqRenderInventory,100));setTimeout(zqRenderInventory,300);setInterval(zqRenderInventory,1400);
 </script>
