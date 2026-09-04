@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.23 DEV</title>
+<title>Zack Quest — V3.23.1 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,7 +193,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.23 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.23.1 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
     <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
 <div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
@@ -238,7 +238,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.23 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.23.1 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -993,6 +993,7 @@ function zqRenderEvolutionPanel(){
   }
   if(goldState) goldState.textContent=dev ? "🧪 FORME ULTIME — palier normal : 10 000 XP" :
     (goldUnlocked ? "✨ FORME ULTIME DÉBLOQUÉE" : "🔒 "+xp+" / 10 000 XP");
+  zqUpdateBranchLabels();
 }
 
 setTimeout(()=>{zqRenderEvolutionPanel();renderKnightPixels()},450);
@@ -1006,98 +1007,97 @@ document.addEventListener("click",(ev)=>{
   if(/^zqEvo/.test(b.id)) zqShowTocadoAgain();
 });
 
-</script>
 
+/* ===== V3.23.1 — FIX CHOIX DU HÉROS / BRANCHE DYNAMIQUE ===== */
+function zqActiveHero(){
+  return localStorage.getItem("zq_active_hero") || "tocado";
+}
 
+function zqBranchLabels(hero){
+  if(hero==="goblin"){
+    return {
+      title:"👹 Évolutions du Gobelin",
+      blue:"Gobelin — Original",
+      red:"Gobelin Rouge — Berserker",
+      green:"Gobelin Vert — Maître des Poisons",
+      black:"Gobelin Noir — Tisseur d’Ombres",
+      gold:"Roi Gobelin — Souverain des Légendes"
+    };
+  }
+  return {
+    title:"⚔️ Évolutions de Tocado",
+    blue:"Tocado Bleu — Original",
+    red:"Tocado Rouge — Courage",
+    green:"Tocado Vert — Émeraude",
+    black:"Black Tocado — Ombre Bleue",
+    gold:"Tocado Doré — Chevalier Céleste"
+  };
+}
 
+function zqUpdateBranchLabels(){
+  const hero=zqActiveHero(), labels=zqBranchLabels(hero);
+  const panel=document.getElementById("zqEvolutionPanel");
+  if(!panel) return;
 
-(function(){
- function ready(){
+  const h2=panel.querySelector("h2");
+  if(h2) h2.textContent=labels.title;
+
+  const pairs=[
+    ["zqEvoBlue",labels.blue],
+    ["zqEvoRed",labels.red],
+    ["zqEvoGreen",labels.green],
+    ["zqEvoBlack",labels.black],
+    ["zqEvoGold",labels.gold]
+  ];
+  pairs.forEach(([id,name])=>{
+    const btn=document.getElementById(id);
+    const row=btn?.closest(".creator-equip-item");
+    const title=row?.querySelector(".creator-equip-info b");
+    if(title) title.textContent=name;
+  });
+
+  // L'ancien aperçu Gobelin n'a plus lieu d'être.
+  const old=document.getElementById("zqGoblinV1")?.closest(".creator-equip-item");
+  if(old) old.style.display="none";
+}
+
+function zqSelectHero(hero){
+  localStorage.setItem("zq_active_hero",hero);
+  const layer=document.getElementById("zqIllustratedHero");
+  const img=document.getElementById("zqIllustratedHeroImg");
+  const pt=document.getElementById("previewType");
+  const gobBtn=document.getElementById("zqChooseGoblin");
+  const tocBtn=document.getElementById("zqChooseTocado");
+
+  if(hero==="goblin"){
+    if(layer && img){
+      img.src=ZQ_GOBLIN_V1;
+      layer.style.display="block";
+    }
+    if(pt) pt.textContent="Gobelin — Malin et imprévisible";
+    if(gobBtn) gobBtn.style.outline="3px solid #62ff9c";
+    if(tocBtn) tocBtn.style.outline="none";
+    try{toast("👹 Gobelin sélectionné")}catch(e){}
+  } else {
+    if(layer) layer.style.display="none";
+    try{renderKnightPixels()}catch(e){}
+    if(pt) pt.textContent="Chevalier — Brave et protecteur";
+    if(tocBtn) tocBtn.style.outline="3px solid #ffd34e";
+    if(gobBtn) gobBtn.style.outline="none";
+    try{toast("⚔️ Tocado sélectionné")}catch(e){}
+  }
+  zqUpdateBranchLabels();
+}
+
+function zqInitHeroSelector(){
   const gob=document.getElementById("zqChooseGoblin");
   const toc=document.getElementById("zqChooseTocado");
-  const old=document.getElementById("zqGoblinV1");
-  if(old){ old.disabled=true; old.style.opacity=".55"; old.style.cursor="default"; }
-  if(gob) gob.onclick=()=>{
-    const layer=document.getElementById("zqIllustratedHero");
-    const img=document.getElementById("zqIllustratedHeroImg");
-    if(layer&&img){ img.src=ZQ_GOBLIN_V1; layer.style.display="block"; }
-    const pt=document.getElementById("previewType");
-    if(pt) pt.textContent="Gobelin — Malin et imprévisible";
-    localStorage.setItem("zq_active_hero","goblin");
-    gob.style.outline="3px solid #62ff9c";
-    if(toc) toc.style.outline="none";
-    try{toast("👹 Gobelin sélectionné") }catch(e){}
-  };
-  if(toc) toc.onclick=()=>{
-    const layer=document.getElementById("zqIllustratedHero");
-    if(layer) layer.style.display="none";
-    localStorage.setItem("zq_active_hero","tocado");
-    toc.style.outline="3px solid #ffd34e";
-    if(gob) gob.style.outline="none";
-    try{renderKnightPixels()}catch(e){}
-    const pt=document.getElementById("previewType");
-    if(pt) pt.textContent="Chevalier — Brave et protecteur";
-    try{toast("⚔️ Tocado sélectionné") }catch(e){}
-  };
- }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",ready);else ready();
-})();
+  if(gob) gob.onclick=()=>zqSelectHero("goblin");
+  if(toc) toc.onclick=()=>zqSelectHero("tocado");
+  zqSelectHero(zqActiveHero());
+}
+setTimeout(zqInitHeroSelector,250);
 
-
-(function(){
- const tocadoLabels=[
-  ["Tocado Bleu — Original","Disponible dès le départ"],
-  ["Tocado Rouge — Courage","🧪 Test disponible — palier normal : 2 000 XP"],
-  ["Tocado Vert — Émeraude","🧪 Test disponible — palier normal : 3 500 XP"],
-  ["Black Tocado — Ombre Bleue","🧪 Test disponible — palier normal : 7 000 XP"],
-  ["Tocado Doré — Chevalier Céleste","🧪 FORME ULTIME — palier normal : 10 000 XP"]
- ];
- const goblinLabels=[
-  ["Gobelin — Original","Disponible dès le départ"],
-  ["Gobelin Rouge — Berserker","🧪 Test disponible — palier normal : 2 000 XP"],
-  ["Gobelin Vert — Maître des Poisons","🧪 Test disponible — palier normal : 3 500 XP"],
-  ["Gobelin Violet — Seigneur des Ténèbres","🧪 Test disponible — palier normal : 7 000 XP"],
-  ["Roi Gobelin — Souverain des Légendes","🧪 FORME ULTIME — palier normal : 10 000 XP"]
- ];
-
- function evolutionRows(){
-   const needles=["Tocado Bleu","Tocado Rouge","Tocado Vert","Black Tocado","Tocado Doré",
-                  "Gobelin Rouge — Berserker","Gobelin Vert — Maître des Poisons",
-                  "Gobelin Violet — Seigneur des Ténèbres","Roi Gobelin — Souverain des Légendes"];
-   const all=[...document.querySelectorAll("div,li,section")];
-   let rows=[];
-   for(const el of all){
-     const t=(el.innerText||"").trim();
-     if(needles.some(n=>t.startsWith(n)) && ![...el.children].some(c=>needles.some(n=>(c.innerText||"").trim().startsWith(n)))){
-       rows.push(el);
-     }
-   }
-   return rows.slice(0,5);
- }
- function applyLabels(labels){
-   const rows=evolutionRows();
-   rows.forEach((row,i)=>{
-     if(!labels[i]) return;
-     const walker=document.createTreeWalker(row,NodeFilter.SHOW_TEXT);
-     let nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
-     const currentNames=["Tocado Bleu — Original","Tocado Rouge — Courage","Tocado Vert — Émeraude",
-       "Black Tocado — Ombre Bleue","Tocado Doré — Chevalier Céleste",
-       "Gobelin — Original","Gobelin Rouge — Berserker","Gobelin Vert — Maître des Poisons",
-       "Gobelin Violet — Seigneur des Ténèbres","Roi Gobelin — Souverain des Légendes"];
-     for(const n of nodes){
-       const s=n.nodeValue.trim();
-       if(currentNames.includes(s)){ n.nodeValue=n.nodeValue.replace(s,labels[i][0]); break; }
-     }
-   });
- }
- function hook(){
-   const gob=document.getElementById("zqChooseGoblin");
-   const toc=document.getElementById("zqChooseTocado");
-   if(gob) gob.addEventListener("click",()=>{setTimeout(()=>applyLabels(goblinLabels),0);});
-   if(toc) toc.addEventListener("click",()=>{setTimeout(()=>applyLabels(tocadoLabels),0);});
- }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",hook); else hook();
-})();
-
+</script>
 </body>
 </html>
