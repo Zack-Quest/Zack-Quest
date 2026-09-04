@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zack Quest — V3.21 DEV</title>
+<title>Zack Quest — V3.22 DEV</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#070b20;color:#f7f8ff}
 button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
@@ -193,9 +193,15 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 
 <div id="creator" class="creator hidden">
   <div class="creator-card">
-    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.21 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
+    <div class="creator-head"><h1>⚔️ CRÉE TON HÉROS — V3.22 DEV</h1><p>Choisis ton pseudo et ton héros. Ton aventure scolaire commence ici.</p></div>
     <div class="step"><h2>1 — Ton pseudo</h2><input id="pseudoInput" maxlength="20" placeholder="Ex. Zack le Stratège" style="width:100%"></div>
-    <div class="step"><h2>2 — Choisis ton héros</h2><div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
+    <div class="step"><h2>2 — Choisis ton héros</h2><section id="zqHeroSelector" style="margin:18px 0;padding:16px;border:2px solid #315fc4;border-radius:18px;background:rgba(8,28,72,.82)">
+<div style="font-weight:900;font-size:20px;margin-bottom:12px">⚔️ CHOIX DU HÉROS</div>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<button id="zqChooseTocado" type="button" style="padding:14px;border-radius:14px;border:2px solid #4b7cff;background:#123b86;color:white;font-weight:900;cursor:pointer">⚔️ TOCADO<br><small>Chevalier</small></button>
+<button id="zqChooseGoblin" type="button" style="padding:14px;border-radius:14px;border:2px solid #3acb78;background:#174b37;color:white;font-weight:900;cursor:pointer">👹 GOBELIN<br><small>Malin et imprévisible</small></button>
+</div></section>
+<div class="hero-grid" id="heroChoices"></div><div class="locked-note">✨ Ton apparence est disponible dès le départ. Les équipements fantastiques seront débloqués avec les niveaux.</div>
       <div class="custom-box">
         <h2>3 — Fais un héros qui te ressemble</h2>
         <div class="custom-row"><div class="custom-label">💇 Cheveux</div><div class="option-list" id="hairOptions"></div></div>
@@ -232,7 +238,7 @@ h1,h2,h3{margin:0}.title{flex:1}.title h1{font-size:23px}.title p{margin:4px 0;c
 <div class="chibi-eye left"></div><div class="chibi-eye right"></div><div class="chibi-mouth"></div>
 <div class="chibi-glasses" id="previewGlasses"><i></i><i></i></div>
 <div class="chibi-emblem" id="previewEmblem">🛡️</div><div class="chibi-badge" id="previewAvatar">🛡️</div>
-</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.21 DEV • test des évolutions sans modifier les XP</div></div>
+</div><div class="preview-name" id="previewName">Ton héros</div><div class="preview-sub" id="previewType">Choisis un personnage</div><div class="visual-status">🧪 V3.22 DEV • test des évolutions sans modifier les XP</div></div>
       <div class="preview"><h2 style="margin-bottom:10px">🏆 ÉVOLUTION</h2><div class="sub">Tes XP actuels restent conservés.</div><div style="font-size:34px;margin:16px 0">🌱 → ⚔️ → 🏆 → 👑</div><div class="sub">Apprenti • Aventurier • Héros • Légende</div><button id="startHero" class="start-btn" onclick="saveHero()" disabled>COMMENCER L'AVENTURE</button></div>
     </div>
   </div>
@@ -919,7 +925,7 @@ function zqRenderEvolutionPanel(){
       <div class="creator-equip-item" style="margin-top:14px;border-color:rgba(90,220,90,.65)">
 <div class="creator-equip-icon">👹</div><div class="creator-equip-info"><b>Gobelin — Original</b>
 <small>🧪 Test disponible — première forme</small></div>
-<button class="creator-equip-btn" id="zqGoblinV1">VISUALISER</button></div></div>`;
+<button class="creator-equip-btn" id="zqGoblinV1">APERÇU DÉPLACÉ</button></div></div>`;
     if(old) old.insertAdjacentElement("afterend",panel);
     else document.querySelector(".custom-box")?.insertAdjacentElement("afterend",panel);
     document.getElementById("zqDevToggle").onclick=zqToggleDev;
@@ -1002,31 +1008,39 @@ document.addEventListener("click",(ev)=>{
 
 </script>
 
+
+
+
 (function(){
-  function setupGoblinBranch(){
-    const btn=document.getElementById("zqGoblinV1");
-    if(!btn) return;
-    const row=btn.closest(".evo-item,.shop-item,.option,.evolution-item,.dev-evo-row,.unlock-item") || btn.parentElement;
-    if(row){
-      row.style.cursor="pointer";
-      row.title="Gobelin — Original";
-      row.addEventListener("click",(e)=>{
-        if(e.target.closest("button") && e.target!==btn) return;
-        if(e.target!==btn) btn.click();
-      });
-    }
-    // Foundation for Goblin's own evolution branch; only Original is active in this build.
-    window.ZQ_GOBLIN_BRANCH = [
-      {id:"original", name:"Gobelin — Original", active:true},
-      {id:"red", name:"Gobelin Rouge — Berserker", active:false},
-      {id:"green", name:"Gobelin Vert", active:false},
-      {id:"violet", name:"Gobelin Violet", active:false},
-      {id:"black", name:"Black Gobelin", active:false},
-      {id:"gold", name:"Gobelin Doré — Légendaire", active:false}
-    ];
-  }
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",setupGoblinBranch);
-  else setupGoblinBranch();
+ function ready(){
+  const gob=document.getElementById("zqChooseGoblin");
+  const toc=document.getElementById("zqChooseTocado");
+  const old=document.getElementById("zqGoblinV1");
+  if(old){ old.disabled=true; old.style.opacity=".55"; old.style.cursor="default"; }
+  if(gob) gob.onclick=()=>{
+    const layer=document.getElementById("zqIllustratedHero");
+    const img=document.getElementById("zqIllustratedHeroImg");
+    if(layer&&img){ img.src=ZQ_GOBLIN_V1; layer.style.display="block"; }
+    const pt=document.getElementById("previewType");
+    if(pt) pt.textContent="Gobelin — Malin et imprévisible";
+    localStorage.setItem("zq_active_hero","goblin");
+    gob.style.outline="3px solid #62ff9c";
+    if(toc) toc.style.outline="none";
+    try{toast("👹 Gobelin sélectionné") }catch(e){}
+  };
+  if(toc) toc.onclick=()=>{
+    const layer=document.getElementById("zqIllustratedHero");
+    if(layer) layer.style.display="none";
+    localStorage.setItem("zq_active_hero","tocado");
+    toc.style.outline="3px solid #ffd34e";
+    if(gob) gob.style.outline="none";
+    try{renderKnightPixels()}catch(e){}
+    const pt=document.getElementById("previewType");
+    if(pt) pt.textContent="Chevalier — Brave et protecteur";
+    try{toast("⚔️ Tocado sélectionné") }catch(e){}
+  };
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",ready);else ready();
 })();
 
 </body>
