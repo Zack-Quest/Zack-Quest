@@ -1517,6 +1517,52 @@ setTimeout(zqV325Bind,600);
   setTimeout(forceOriginalOneClick,1500);
 })();
 
+
+/* ===== V3.33.1 — FIX FINAL MAPPING GOBELIN / HANDLERS UNIQUES =====
+   Supprime les anciens gestionnaires empilés sur les 5 boutons d'évolution.
+   Mapping verrouillé : Original 04 / Rouge 06 / Vert 07 / Noir 09 / Roi 10.
+*/
+(function(){
+  const cleanMap={
+    zqEvoBlue:"Bleu",
+    zqEvoRed:"Rouge",
+    zqEvoGreen:"Vert",
+    zqEvoBlack:"Noir",
+    zqEvoGold:"Doré"
+  };
+
+  function bindCleanEvolutionButtons(){
+    for(const [id,evo] of Object.entries(cleanMap)){
+      const old=document.getElementById(id);
+      if(!old || old.dataset.zqV3331==="1") continue;
+
+      // Le clone conserve l'apparence/état mais retire TOUS les anciens listeners.
+      const b=old.cloneNode(true);
+      b.dataset.zqV3331="1";
+      old.replaceWith(b);
+
+      b.addEventListener("click",function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+
+        if(zqActiveHero()==="goblin"){
+          window.zqV325ShowGoblin(evo);
+        }else{
+          zqShowTocadoAgain();
+          zqSetEvolution(evo);
+        }
+        setTimeout(zqRenderEvolutionPanel,0);
+        return false;
+      },true);
+    }
+  }
+
+  // Le panneau existe déjà à ce stade, puis on rebinde sans polling agressif.
+  setTimeout(bindCleanEvolutionButtons,1700);
+  setTimeout(bindCleanEvolutionButtons,2300);
+})();
+
 </script>
 </body>
 </html>
